@@ -38,6 +38,7 @@ public class UserMessageProcessorTest {
         var helpMessageUpdate = mock(Update.class);
         var message = mock(Message.class);
         var chat = mock(Chat.class);
+
         Mockito.when(helpMessageUpdate.message()).thenReturn(message);
         Mockito.when(message.chat()).thenReturn(chat);
         Mockito.when(chat.id()).thenReturn(666L);
