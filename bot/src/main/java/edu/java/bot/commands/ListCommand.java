@@ -5,13 +5,10 @@ import com.pengrad.telegrambot.request.SendMessage;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StartCommand implements Command {
-    private static final String COMMAND_NAME = "/start";
-    private static final String COMMAND_DESCRIPTION = "register a user";
-    private static final String GREETING = """
-        Hello! I'm a bot for tracking updates via links.
-        Use /help to see available commands
-        """;
+public class ListCommand implements Command {
+
+    private static final String COMMAND_DESCRIPTION = "Show list of tracked links";
+    private static final String COMMAND_NAME = "/list";
 
     @Override
     public String command() {
@@ -25,6 +22,9 @@ public class StartCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-        return new SendMessage(update.message().chat().id(), GREETING);
+        //todo logic
+        String responseText = "Sorry, this command is not supported in the current version of the bot";
+
+        return new SendMessage(update.message().chat().id(), responseText);
     }
 }

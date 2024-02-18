@@ -1,18 +1,17 @@
 package edu.java.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
+import edu.java.bot.processor.UserMessageProcessorImpl;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class UpdateTrackerBot implements Bot {
     @Override
     public int process(List<Update> updates) {
         for (Update update : updates) {
-            if (update != null) {
+            if (update != null && update.message() != null) {
                 execute(userMessageProcessor.process(update));
             }
         }
@@ -40,8 +39,8 @@ public class UpdateTrackerBot implements Bot {
     @Override
     @PostConstruct
     public void start() {
-        telegramBot.setUpdatesListener(this);
         initMenu();
+        telegramBot.setUpdatesListener(this);
     }
 
     @Override

@@ -1,8 +1,10 @@
 package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.BotCommand;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import lombok.NonNull;
 
 public interface Command {
     String command();
@@ -11,8 +13,10 @@ public interface Command {
 
     SendMessage handle(Update update);
 
-    default boolean supports(Update update) {
-        return update.message().text().equals(command());
+    default boolean supports(@NonNull Update update) {
+        String message = update.message().text();
+
+        return message.startsWith(command());
     }
 
     default BotCommand toApiCommand() {
