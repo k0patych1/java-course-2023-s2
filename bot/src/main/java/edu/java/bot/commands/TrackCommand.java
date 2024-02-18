@@ -34,7 +34,8 @@ public class TrackCommand implements Command {
         String[] commandParts = messageText.split(" ");
 
         if (commandParts.length != 2) {
-            return new SendMessage(update.message().chat().id(), "Please provide a link to track along with the /track command.");
+            return new SendMessage(update.message().chat().id(),
+                "Please provide a link to track along with the /track command.");
         }
 
         String trackedLink = commandParts[1];
