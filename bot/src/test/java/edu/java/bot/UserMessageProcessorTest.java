@@ -8,7 +8,7 @@ import edu.java.bot.commands.Command;
 import edu.java.bot.processor.UserMessageProcessor;
 import edu.java.bot.processor.UserMessageProcessorImpl;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.mock;

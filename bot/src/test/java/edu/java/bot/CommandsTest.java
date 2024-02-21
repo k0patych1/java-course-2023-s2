@@ -12,7 +12,7 @@ import edu.java.bot.validators.LinkValidator;
 import edu.java.bot.validators.StackOverFlowValidator;
 import edu.java.bot.validators.ValidatorRepo;
 import java.util.List;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
