@@ -7,7 +7,7 @@ import edu.java.services.clients.GitHubClientImpl;
 import edu.java.services.clients.StackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClientImpl;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
