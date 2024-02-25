@@ -7,6 +7,8 @@ import edu.java.services.clients.GitHubClientImpl;
 import edu.java.services.clients.StackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClientImpl;
 import org.junit.Rule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -15,7 +17,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class ClientsTest {
     @Rule
-    public WireMockRule wireMockRule = new WireMockRule(options().dynamicPort());
+    public WireMockRule wireMockRule = new WireMockRule();
 
     public void stubFor(String url, String body) {
         WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(url))
@@ -27,6 +29,8 @@ public class ClientsTest {
 
     @Test
     public void gitHubTest() {
+        wireMockRule.start();
+
         String user = "user";
         String repository = "tink";
 
@@ -50,10 +54,14 @@ public class ClientsTest {
 
         assertThat(gitHubClient.fetchUser(user, repository).name()).isEqualTo("test");
         assertThat(gitHubClient.fetchUser(user, repository).time()).isEqualTo("2023-02-06T04:58:53Z");
+
+        wireMockRule.stop();
     }
 
     @Test
     public void stackOverFlowTest() {
+        wireMockRule.start();
+
         String questionId = "239";
 
         String baseMockUrl = wireMockRule.baseUrl();
@@ -96,5 +104,7 @@ public class ClientsTest {
 
         assertThat(gitHubClient.fetchQuestion(questionId).answerList().getFirst().time())
             .isEqualTo("2024-02-25T15:57:43Z");
+
+        wireMockRule.stop();
     }
 }
