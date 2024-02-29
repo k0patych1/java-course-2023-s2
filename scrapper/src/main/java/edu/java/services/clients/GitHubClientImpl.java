@@ -16,7 +16,7 @@ public class GitHubClientImpl implements GitHubClient {
     }
 
     @Override
-    public GitHubRepoLastUpdate fetchUser(String user, String repository) {
+    public GitHubRepoLastUpdate fetchRepo(String user, String repository) {
         return webClient.get()
             .uri("/repos/{user}/{repository}", user, repository)
             .retrieve()
