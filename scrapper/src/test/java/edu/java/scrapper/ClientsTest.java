@@ -52,8 +52,8 @@ public class ClientsTest {
 
         GitHubClient gitHubClient = new GitHubClientImpl(mockWebClient);
 
-        assertThat(gitHubClient.fetchUser(user, repository).name()).isEqualTo("test");
-        assertThat(gitHubClient.fetchUser(user, repository).time()).isEqualTo("2023-02-06T04:58:53Z");
+        assertThat(gitHubClient.fetchRepo(user, repository).name()).isEqualTo("test");
+        assertThat(gitHubClient.fetchRepo(user, repository).time()).isEqualTo("2023-02-06T04:58:53Z");
 
         wireMockRule.stop();
     }
