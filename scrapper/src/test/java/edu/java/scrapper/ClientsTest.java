@@ -7,12 +7,9 @@ import edu.java.services.clients.GitHubClientImpl;
 import edu.java.services.clients.StackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClientImpl;
 import org.junit.Rule;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class ClientsTest {
