@@ -1,8 +1,8 @@
 package edu.java.bot.controller;
 
-import edu.java.bot.model.dto.response.ApiErrorResponse;
 import java.util.Arrays;
 import java.util.Collections;
+import model.ApiErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,7 +16,7 @@ public class ExceptionControllerAdvice {
             .badRequest()
             .body(new ApiErrorResponse()
                 .code("400")
-                .description("Invalid update")
+                .description("Invalid updateк")
                 .exceptionName(e.getClass().getName())
                 .exceptionMessage(e.getMessage())
                 .stacktrace(Collections.singletonList(Arrays.asList(e.getStackTrace()).toString()))).getBody();

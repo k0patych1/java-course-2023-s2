@@ -1,8 +1,6 @@
-package edu.java.clients;
+package edu.java.services.clients;
 
-import model.AddLinkRequest;
-import model.LinkResponse;
-import model.RemoveLinkRequest;
+import edu.java.models.dto.request.LinkUpdate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,24 +20,13 @@ public class BotClientImpl implements BotClient {
     }
 
     @Override
-    public LinkResponse addLink(AddLinkRequest addLinkRequest) {
+    public String update(LinkUpdate linkUpdate) {
         return webClient
             .post()
             .uri(UPDATES)
-            .body(BodyInserters.fromValue(addLinkRequest))
+            .body(BodyInserters.fromValue(linkUpdate))
             .retrieve()
-            .bodyToMono(LinkResponse.class)
-            .block();
-    }
-
-    @Override
-    public LinkResponse removeLink(RemoveLinkRequest removeLinkRequest) {
-        return webClient
-            .post()
-            .uri(UPDATES)
-            .body(BodyInserters.fromValue(removeLinkRequest))
-            .retrieve()
-            .bodyToMono(LinkResponse.class)
+            .bodyToMono(String.class)
             .block();
     }
 }
