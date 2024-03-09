@@ -2,10 +2,15 @@ package edu.java.scrapper;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import edu.java.models.dto.request.LinkUpdate;
+import edu.java.services.clients.BotClient;
+import edu.java.services.clients.BotClientImpl;
 import edu.java.services.clients.GitHubClient;
 import edu.java.services.clients.GitHubClientImpl;
 import edu.java.services.clients.StackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClientImpl;
+import java.net.URI;
+import java.util.Arrays;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,10 +21,17 @@ public class ClientsTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    public void stubFor(String url, String body) {
-        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(url))
+    public void stubForGet(String endpoint, String body) {
+        WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(endpoint))
             .willReturn(aResponse()
                 .withHeader("Content-Type", "application/json")
+                .withBody(body)
+                .withStatus(200)));
+    }
+
+    public void stubForPost(String endpoint, String body) {
+        WireMock.stubFor(WireMock.post(WireMock.urlEqualTo(endpoint))
+            .willReturn(aResponse()
                 .withBody(body)
                 .withStatus(200)));
     }
@@ -32,7 +44,7 @@ public class ClientsTest {
         String repository = "tink";
 
         String baseMockUrl = wireMockRule.baseUrl();
-        String url = "/repos/" + user + '/' + repository;
+        String endpoint = "/repos/" + user + '/' + repository;
 
         String body = """
                 {
@@ -43,9 +55,11 @@ public class ClientsTest {
                 }
                 """;
 
-        stubFor(url, body);
+        stubForGet(endpoint, body);
 
-        WebClient mockWebClient = WebClient.builder().baseUrl(baseMockUrl).build();
+        WebClient mockWebClient = WebClient.builder()
+            .baseUrl(baseMockUrl)
+            .build();
 
         GitHubClient gitHubClient = new GitHubClientImpl(mockWebClient);
 
@@ -62,7 +76,7 @@ public class ClientsTest {
         String questionId = "239";
 
         String baseMockUrl = wireMockRule.baseUrl();
-        String url = "/questions/" + questionId + "?order=desc&sort=activity&site=stackoverflow";
+        String endpoint = "/questions/" + questionId + "?order=desc&sort=activity&site=stackoverflow";
 
         String body = """
             {
@@ -93,14 +107,49 @@ public class ClientsTest {
             }
             """;
 
-        stubFor(url, body);
+        stubForGet(endpoint, body);
 
-        WebClient mockWebClient = WebClient.builder().baseUrl(baseMockUrl).build();
+        WebClient mockWebClient = WebClient.builder()
+            .baseUrl(baseMockUrl)
+            .build();
 
         StackOverFlowClient gitHubClient = new StackOverFlowClientImpl(mockWebClient);
 
-        assertThat(gitHubClient.fetchQuestion(questionId).answerList().getFirst().time())
+        assertThat(gitHubClient.fetchQuestion(questionId)
+            .answerList().
+            getFirst()
+            .time())
             .isEqualTo("2024-02-25T15:57:43Z");
+
+        wireMockRule.stop();
+    }
+
+    @Test
+    public void botClientTest() {
+        wireMockRule.start();
+
+        String baseMockUrl = wireMockRule.baseUrl();
+
+        WebClient mockWebClient = WebClient.builder()
+            .baseUrl(baseMockUrl)
+            .build();
+
+        BotClient botClient = new BotClientImpl(mockWebClient);
+
+        String endpoint = "/updates";
+        String body = "OK";
+
+        stubForPost(endpoint, body);
+
+        LinkUpdate linkUpdate = new LinkUpdate();
+        linkUpdate.setId(2018L);
+        linkUpdate.setUrl(URI.create("https://stackoverflow.com/questions/"));
+        linkUpdate.setDescription("20!8");
+        linkUpdate.setTgChatIds(Arrays.asList(2L, 4L));
+
+        String response = botClient.update(linkUpdate);
+
+        assertThat(response).isEqualTo("OK");
 
         wireMockRule.stop();
     }

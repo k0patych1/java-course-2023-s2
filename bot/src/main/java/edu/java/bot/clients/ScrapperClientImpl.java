@@ -4,6 +4,7 @@ import edu.java.bot.model.dto.request.AddLinkRequest;
 import edu.java.bot.model.dto.request.RemoveLinkRequest;
 import edu.java.bot.model.dto.response.LinkResponse;
 import edu.java.bot.model.dto.response.ListLinksResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -11,8 +12,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class ScrapperClientImpl implements ScrapperClient {
-
-    private static final String SCRAPPER_URL = "https://localhost:8080";
     private static final String LINKS_ENDPOINT = "/links";
     private static final String CHAT_ENDPOINT = "/tg-chat/{id}";
 
@@ -20,19 +19,16 @@ public class ScrapperClientImpl implements ScrapperClient {
 
     private final WebClient webClient;
 
-    public ScrapperClientImpl() {
-        webClient = WebClient.create(SCRAPPER_URL);
-    }
-
-    public ScrapperClientImpl(String url) {
-        webClient = WebClient.create(url);
+    @Autowired
+    public ScrapperClientImpl(WebClient webClient) {
+        this.webClient = webClient;
     }
 
     @Override
     public String registerChat(Long id) {
         return webClient
             .post()
-            .uri(LINKS_ENDPOINT, id)
+            .uri(CHAT_ENDPOINT, id)
             .retrieve()
             .bodyToMono(String.class)
             .block();
