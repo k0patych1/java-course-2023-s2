@@ -9,7 +9,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 public class BotClientImpl implements BotClient {
-    private final static String BOT_URL = "https://localhost:8090";
     private final static String ENDPOINT = "/updates";
     private final WebClient webClient;
 
