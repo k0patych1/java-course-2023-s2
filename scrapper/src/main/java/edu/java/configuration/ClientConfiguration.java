@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ClientConfiguration {
     private static final String GIT_HUB_BASE_URL = "https://api.github.com";
     private static final String STACK_OVER_FLOW_BASE_URL = "https://api.stackexchange.com";
+    private static final String BOT_URL = "https://localhost:8090";
 
     @Bean
     public WebClient gitHubClient(ApplicationConfig applicationConfig) {
@@ -27,6 +28,13 @@ public class ClientConfiguration {
 
         return WebClient.builder()
             .baseUrl(baseUrl)
+            .build();
+    }
+
+    @Bean
+    public WebClient botClient() {
+        return WebClient.builder()
+            .baseUrl(BOT_URL)
             .build();
     }
 }
