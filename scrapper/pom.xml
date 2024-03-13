@@ -13,6 +13,12 @@
     <version>${revision}</version>
 
     <dependencies>
+        <!-- Database -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
         <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -133,6 +139,11 @@
             <artifactId>netty-resolver-dns-native-macos</artifactId>
             <version>4.1.107.Final</version>
             <classifier>osx-x86_64</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 
