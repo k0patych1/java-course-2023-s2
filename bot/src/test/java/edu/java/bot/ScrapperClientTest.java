@@ -2,10 +2,10 @@ package edu.java.bot;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import edu.java.bot.clients.IScrapperClient;
 import edu.java.bot.clients.ScrapperClient;
-import edu.java.bot.clients.ScrapperClientImpl;
-import edu.java.bot.model.dto.response.LinkResponse;
-import edu.java.bot.model.dto.response.ListLinksResponse;
+import edu.java.bot.models.dto.response.LinkResponse;
+import edu.java.bot.models.dto.response.ListLinksResponse;
 import java.net.URI;
 import java.util.List;
 import org.junit.Rule;
@@ -34,7 +34,7 @@ public class ScrapperClientTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        ScrapperClient scrapperClient = new ScrapperClientImpl(mockWebClient);
+        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient);
 
         String endpoint = "/tg-chat/239";
         String body = "OK";
@@ -61,7 +61,7 @@ public class ScrapperClientTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        ScrapperClient scrapperClient = new ScrapperClientImpl(mockWebClient);
+        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient);
 
         String endpoint = "/tg-chat/239";
         String body = "OK";
@@ -88,7 +88,7 @@ public class ScrapperClientTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        ScrapperClient scrapperClient = new ScrapperClientImpl(mockWebClient);
+        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient);
 
         String endpoint = "/links";
         String body = """

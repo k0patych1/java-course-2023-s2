@@ -5,8 +5,8 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.commands.Command;
-import edu.java.bot.processor.UserMessageProcessor;
-import edu.java.bot.processor.UserMessageProcessorImpl;
+import edu.java.bot.services.processors.UserMessageProcessor;
+import edu.java.bot.services.processors.UserMessageProcessorImpl;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -27,7 +27,8 @@ public class UserMessageProcessorTest {
 
         List<Command> commands = List.of(command);
 
-        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(commands);;
+        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(commands);
+        ;
         SendMessage sendMessage = messageProcessor.process(helpMessageUpdate);
 
         assertThat(sendMessage.getParameters()).isEqualTo(expectedSendMessage.getParameters());
@@ -51,7 +52,8 @@ public class UserMessageProcessorTest {
 
         List<Command> commands = List.of(command);
 
-        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(commands);;
+        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(commands);
+        ;
         SendMessage sendMessage = messageProcessor.process(helpMessageUpdate);
 
         assertThat(sendMessage.getParameters()).isEqualTo(expectedSendMessage.getParameters());

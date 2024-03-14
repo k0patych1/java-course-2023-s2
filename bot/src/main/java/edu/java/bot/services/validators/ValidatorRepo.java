@@ -1,4 +1,4 @@
-package edu.java.bot.validators;
+package edu.java.bot.services.validators;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

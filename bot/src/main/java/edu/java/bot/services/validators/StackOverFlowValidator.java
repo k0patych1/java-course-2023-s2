@@ -1,4 +1,4 @@
-package edu.java.bot.validators;
+package edu.java.bot.services.validators;
 
 import org.springframework.stereotype.Service;
 

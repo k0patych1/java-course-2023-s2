@@ -1,4 +1,4 @@
-package edu.java.bot;
+package edu.java.bot.services.listeners;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;
@@ -7,7 +7,7 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
-import edu.java.bot.processor.UserMessageProcessorImpl;
+import edu.java.bot.services.processors.UserMessageProcessorImpl;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UpdateTrackerBot implements Bot {
+public class UpdatesListenerBot implements IUpdatesListenerBot {
     private final TelegramBot telegramBot;
 
     private final UserMessageProcessorImpl userMessageProcessor;
