@@ -1,4 +1,4 @@
-package edu.java.bot.model.dto.response;
+package edu.java.bot.models.dto.response;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

@@ -4,11 +4,11 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import edu.java.models.dto.request.LinkUpdate;
 import edu.java.services.clients.BotClient;
-import edu.java.services.clients.BotClientImpl;
 import edu.java.services.clients.GitHubClient;
-import edu.java.services.clients.GitHubClientImpl;
+import edu.java.services.clients.IBotClient;
+import edu.java.services.clients.IGitHubClient;
+import edu.java.services.clients.IStackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClient;
-import edu.java.services.clients.StackOverFlowClientImpl;
 import java.net.URI;
 import java.util.Arrays;
 import org.junit.Rule;
@@ -61,7 +61,7 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        GitHubClient gitHubClient = new GitHubClientImpl(mockWebClient);
+        IGitHubClient gitHubClient = new GitHubClient(mockWebClient);
 
         assertThat(gitHubClient.fetchRepo(user, repository).name()).isEqualTo("test");
         assertThat(gitHubClient.fetchRepo(user, repository).time()).isEqualTo("2023-02-06T04:58:53Z");
@@ -113,7 +113,7 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        StackOverFlowClient gitHubClient = new StackOverFlowClientImpl(mockWebClient);
+        IStackOverFlowClient gitHubClient = new StackOverFlowClient(mockWebClient);
 
         assertThat(gitHubClient.fetchQuestion(questionId)
             .answerList().
@@ -134,7 +134,7 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        BotClient botClient = new BotClientImpl(mockWebClient);
+        IBotClient botClient = new BotClient(mockWebClient);
 
         String endpoint = "/updates";
         String body = "OK";

@@ -1,4 +1,4 @@
-package edu.java.bot.validators;
+package edu.java.bot.services.validators;
 
 public interface LinkValidator {
     boolean isLinkValid(String link);

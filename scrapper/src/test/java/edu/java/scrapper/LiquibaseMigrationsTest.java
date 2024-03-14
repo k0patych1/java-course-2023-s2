@@ -1,10 +1,11 @@
 package edu.java.scrapper;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.sql.*;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers

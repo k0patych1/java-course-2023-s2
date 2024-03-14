@@ -1,4 +1,4 @@
-package edu.java.bot.controller;
+package edu.java.bot.controllers;
 
 import java.util.Arrays;
 import java.util.Collections;
