@@ -1,14 +1,15 @@
 create table chat
 (
-    chat_id bigint not null,
-    primary key (chat_id)
+    id bigint not null,
+    primary key (id)
 );
 
 create table link
 (
-    link_id  bigint generated always as identity,
+    id bigint generated always as identity,
     url text not null,
-    primary key (link_id),
+    last_check_time timestamp with time zone not null,
+    primary key (id),
     unique (url)
 );
 
@@ -20,7 +21,7 @@ create table subscriptions
     created_at timestamp with time zone not null,
 
     primary key (id),
-    foreign key (chat_id) references chat(chat_id),
-    foreign key (link_id) references link(link_id)
+    foreign key (chat_id) references chat(id) on delete cascade,
+    foreign key (link_id) references link(id) on delete cascade
 );
 

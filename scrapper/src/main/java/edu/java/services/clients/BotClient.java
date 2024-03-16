@@ -13,7 +13,7 @@ public class BotClient implements IBotClient {
     private final WebClient webClient;
 
     @Autowired
-    public BotClient(@Qualifier("botClient") WebClient webClient) {
+    public BotClient(@Qualifier("botWebClient") WebClient webClient) {
         this.webClient = webClient;
     }
 

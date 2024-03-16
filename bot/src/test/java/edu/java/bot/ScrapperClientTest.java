@@ -2,10 +2,10 @@ package edu.java.bot;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import edu.java.bot.clients.IScrapperClient;
-import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.models.dto.response.LinkResponse;
 import edu.java.bot.models.dto.response.ListLinksResponse;
+import edu.java.bot.services.clients.IScrapperClient;
+import edu.java.bot.services.clients.ScrapperClient;
 import java.net.URI;
 import java.util.List;
 import org.junit.Rule;

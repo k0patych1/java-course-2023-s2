@@ -16,7 +16,10 @@ public record ApplicationConfig(
     String gitHubBaseUrl,
 
     @NotEmpty
-    String stackOverFlowBaseUrl
+    String stackOverFlowBaseUrl,
+
+    @NotNull
+    Duration intervalCheckTime
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }

@@ -11,7 +11,7 @@ public class StackOverFlowClient implements IStackOverFlowClient {
     private final WebClient webClient;
 
     @Autowired
-    public StackOverFlowClient(@Qualifier("stackOverflowClient") WebClient webClient) {
+    public StackOverFlowClient(@Qualifier("stackOverflowWebClient") WebClient webClient) {
         this.webClient = webClient;
     }
 

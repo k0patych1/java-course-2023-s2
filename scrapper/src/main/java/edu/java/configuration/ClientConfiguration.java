@@ -12,7 +12,7 @@ public class ClientConfiguration {
     private static final String BOT_URL = "https://localhost:8090";
 
     @Bean
-    public WebClient gitHubClient(ApplicationConfig applicationConfig) {
+    public WebClient gitHubWebClient(ApplicationConfig applicationConfig) {
         String baseUrl = Optional.ofNullable(applicationConfig.gitHubBaseUrl())
             .orElse(GIT_HUB_BASE_URL);
 
@@ -22,7 +22,7 @@ public class ClientConfiguration {
     }
 
     @Bean
-    public WebClient stackOverflowClient(ApplicationConfig applicationConfig) {
+    public WebClient stackOverflowWebClient(ApplicationConfig applicationConfig) {
         String baseUrl = Optional.ofNullable(applicationConfig.stackOverFlowBaseUrl())
             .orElse(STACK_OVER_FLOW_BASE_URL);
 
@@ -32,7 +32,7 @@ public class ClientConfiguration {
     }
 
     @Bean
-    public WebClient botClient() {
+    public WebClient botWebClient() {
         return WebClient.builder()
             .baseUrl(BOT_URL)
             .build();

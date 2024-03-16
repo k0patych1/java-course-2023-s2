@@ -1,4 +1,4 @@
-package edu.java.bot.clients;
+package edu.java.bot.services.clients;
 
 import edu.java.bot.models.dto.request.AddLinkRequest;
 import edu.java.bot.models.dto.request.RemoveLinkRequest;
