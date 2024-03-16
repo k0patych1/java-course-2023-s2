@@ -7,6 +7,7 @@ import edu.java.repositories.jdbc.JdbcSubscriptionRepository;
 import edu.java.repositories.jdbc.JdbcTgChatRepository;
 import java.time.OffsetDateTime;
 import java.util.List;
+import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class JdbcSubscriptionsTest {
+public class JdbcSubscriptionsTest extends IntegrationTest {
     @Autowired
     private JdbcSubscriptionRepository subscriptionRepository;
 
