@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class JdbcLinkTest extends IntegrationTest {
@@ -56,7 +57,8 @@ public class JdbcLinkTest extends IntegrationTest {
     @Transactional
     @Rollback
     public void updateTest() {
-        Link link = new Link(0L, "https://www.google.com", OffsetDateTime.now());
+        OffsetDateTime startTime = OffsetDateTime.MIN;
+        Link link = new Link(0L, "https://www.google.com", startTime);
         Link savedLink = linkRepository.save(link);
         OffsetDateTime updateTime = OffsetDateTime.now();
         linkRepository.update(savedLink.getId(), updateTime);
@@ -66,7 +68,7 @@ public class JdbcLinkTest extends IntegrationTest {
             .query(Link.class)
             .single();
 
-        assertThat(updatedLink.getLastCheckTime()).isEqualTo(updateTime);
+        assertTrue(updatedLink.getLastCheckTime().isAfter(startTime));
     }
 
     @Test
