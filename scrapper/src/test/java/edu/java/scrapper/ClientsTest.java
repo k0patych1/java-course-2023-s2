@@ -2,6 +2,7 @@ package edu.java.scrapper;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import edu.java.models.dto.Link;
 import edu.java.models.dto.request.LinkUpdate;
 import edu.java.services.clients.BotClient;
 import edu.java.services.clients.GitHubClient;
@@ -10,7 +11,9 @@ import edu.java.services.clients.IGitHubClient;
 import edu.java.services.clients.IStackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClient;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
+import edu.java.services.parsers.GitHubUrlParser;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,7 +40,7 @@ public class ClientsTest {
     }
 
     @Test
-    public void gitHubTest() {
+    public void gitHubClientLastUpdateTest() {
         wireMockRule.start();
 
         String user = "user";
@@ -61,16 +64,84 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IGitHubClient gitHubClient = new GitHubClient(mockWebClient);
+        GitHubUrlParser urlParser = new GitHubUrlParser();
 
-        assertThat(gitHubClient.fetchRepo(user, repository).name()).isEqualTo("test");
-        assertThat(gitHubClient.fetchRepo(user, repository).time()).isEqualTo("2023-02-06T04:58:53Z");
+        IGitHubClient gitHubClient = new GitHubClient(mockWebClient, urlParser);
+
+        Link link = new Link(0L, "https://github.com/user/tink", OffsetDateTime.MIN);
+
+
+        assertThat(gitHubClient.fetchRepo(link).name()).isEqualTo("test");
+        assertThat(gitHubClient.fetchRepo(link).time()).isEqualTo("2023-02-06T04:58:53Z");
 
         wireMockRule.stop();
     }
 
     @Test
-    public void stackOverFlowTest() {
+    public void gitHubClientGetInfoTest() {
+        wireMockRule.start();
+
+        String user = "user";
+        String repository = "tink";
+
+        String baseMockUrl = wireMockRule.baseUrl();
+        String endpoint = "/repos/" + user + '/' + repository + "/commits/main";
+
+        String body = """
+            {
+              "commit": {
+                "committer": {
+                  "name": "k0patych1",
+                  "date": "2024-03-17T14:22:29Z"
+                },
+                "message": "second"
+              },
+              "stats": {
+                "additions": 1,
+                "deletions": 2
+              }
+            }
+            """;
+
+        stubForGet(endpoint, body);
+
+        WebClient mockWebClient = WebClient.builder()
+            .baseUrl(baseMockUrl)
+            .build();
+
+        GitHubUrlParser urlParser = new GitHubUrlParser();
+
+        IGitHubClient gitHubClient = new GitHubClient(mockWebClient, urlParser);
+
+        Link link = new Link(0L, "https://github.com/user/tink", OffsetDateTime.MIN);
+
+
+        String botMessage = gitHubClient.getInfoAboutUpdate(link);
+
+        String expectedMessage = """
+            Repository: "https://github.com/user/tink" was updated
+            New commit in main branch:
+            Name: second
+            Committer: k0patych1
+            Time : 2024-03-17T14:22:29Z
+            Additions : 1
+            Deletions : 2
+            """;
+
+        assertThat(botMessage).isEqualTo(expectedMessage);
+
+        Link updatedLink = new Link(link.getId(), link.getUrl(), OffsetDateTime.MAX);
+
+        assertThat(gitHubClient.getInfoAboutUpdate(updatedLink))
+            .isEqualTo("""
+            Repository: "https://github.com/user/tink" was updated
+            """);
+
+        wireMockRule.stop();
+    }
+
+    @Test
+    public void stackOverFlowClientTest() {
         wireMockRule.start();
 
         String questionId = "239";

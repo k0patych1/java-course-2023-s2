@@ -26,10 +26,12 @@ public class JdbcSubscriptionRepository implements ISubscriptionRepository {
     }
 
     @Override
-    public void delete(Long chatId, Long linkId) {
-        jdbcClient.sql("DELETE FROM subscriptions WHERE chat_id = ? AND link_id = ?")
+    public boolean delete(Long chatId, Long linkId) {
+        int removed = jdbcClient.sql("DELETE FROM subscriptions WHERE chat_id = ? AND link_id = ?")
                 .params(chatId, linkId)
                 .update();
+
+        return removed > 0;
     }
 
     @Override

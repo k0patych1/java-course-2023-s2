@@ -29,7 +29,11 @@ public class LinksController implements LinksApi {
         ServerWebExchange exchange
     ) {
         URI url = Objects.requireNonNull(removeLinkRequest.block()).getLink();
-        linkService.remove(url, tgChatId);
+
+        if (!linkService.remove(url, tgChatId)) {
+            return Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }
+
         LinkResponse linkResponse = new LinkResponse();
         linkResponse.setId(tgChatId);
         linkResponse.setUrl(url);
@@ -40,7 +44,6 @@ public class LinksController implements LinksApi {
     @Override
     public Mono<ResponseEntity<ListLinksResponse>> linksGet(Long tgChatId, ServerWebExchange exchange) {
         List<Link> links = linkService.listAllWithChatId(tgChatId);
-
 
         ListLinksResponse response = new ListLinksResponse();
 

@@ -36,14 +36,16 @@ public class JdbcLinkService implements ILinkService {
 
     @Override
     @Transactional
-    public void remove(URI url, Long chatId) {
+    public boolean remove(URI url, Long chatId) {
         Link link = jdbcLinkRepository.findByUrl(url.toString()).orElseThrow();
 
-        jdbcSubscriptionRepository.delete(link.getId(), chatId);
+        boolean wasInTable = jdbcSubscriptionRepository.delete(link.getId(), chatId);
 
-        if (jdbcSubscriptionRepository.findAllChatsWithLinkId(link.getId()).isEmpty()) {
+        if (wasInTable && jdbcSubscriptionRepository.findAllChatsWithLinkId(link.getId()).isEmpty()) {
             jdbcLinkRepository.delete(link.getId());
         }
+
+        return wasInTable;
     }
 
     @Override
@@ -65,4 +67,6 @@ public class JdbcLinkService implements ILinkService {
     public List<Link> listOldChecked(OffsetDateTime interval) {
         return jdbcLinkRepository.findAllByLastCheckTimeBefore(interval);
     }
+
+
 }

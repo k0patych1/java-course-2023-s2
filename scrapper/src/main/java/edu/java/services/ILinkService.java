@@ -8,7 +8,7 @@ import java.util.List;
 public interface ILinkService {
     void add(URI url, Long chatId);
 
-    void remove(URI url, Long chatId);
+    boolean remove(URI url, Long chatId);
 
     void update(Long linkId, OffsetDateTime lastCheckedAt);
 
