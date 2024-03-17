@@ -9,21 +9,21 @@ public record GitHubLastCommitInMainBranch(
 
     @JsonProperty("stats")
     Stats stats
-){
+) {
     public record Commit(
         @JsonProperty("message")
         String message,
 
         @JsonProperty("committer")
         Committer committer
-    ){
+    ) {
         public record Committer(
             @JsonProperty("name")
             String name,
 
             @JsonProperty("date")
             OffsetDateTime time
-        ){
+        ) {
         }
     }
 
@@ -33,6 +33,6 @@ public record GitHubLastCommitInMainBranch(
 
         @JsonProperty("deletions")
         int deletions
-    ){
+    ) {
     }
 }

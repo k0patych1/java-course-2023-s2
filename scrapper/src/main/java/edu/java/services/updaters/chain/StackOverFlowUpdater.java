@@ -1,11 +1,11 @@
 package edu.java.services.updaters.chain;
 
-import edu.java.models.StackOverFlowLastUpdate;
+import edu.java.models.StackOverFlowLastAnswer;
 import edu.java.models.dto.Link;
 import edu.java.models.dto.TgChat;
-import edu.java.models.dto.request.LinkUpdate;
-import edu.java.services.clients.BotClient;
-import edu.java.services.clients.StackOverFlowClient;
+import edu.java.services.IStackOverFlowService;
+import edu.java.services.clients.IBotClient;
+import edu.java.services.clients.IStackOverFlowClient;
 import edu.java.services.parsers.StackOverFlowUrlParser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +14,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class StackOverFlowUpdater implements UpdatersChain {
-    private final BotClient botClient;
+    private final IBotClient botClient;
 
-    private final StackOverFlowClient client;
+    private final IStackOverFlowClient stackOverFlowClient;
 
     private final StackOverFlowUrlParser urlParser;
+
+    private final IStackOverFlowService stackOverFlowService;
+
 
     @Override
     public boolean canUpdate(Link link) {
@@ -29,15 +32,10 @@ public class StackOverFlowUpdater implements UpdatersChain {
     public int update(Link link, List<TgChat> tgChats) {
         String questionId = urlParser.getQuestionId(link.getUrl());
 
-        StackOverFlowLastUpdate update = client.fetchQuestion(questionId);
+        StackOverFlowLastAnswer answer = stackOverFlowClient.fetchQuestion(questionId);
 
-        if (update.answerList().getFirst().time().isAfter(link.getLastCheckTime())) {
-            LinkUpdate updateToBot = new LinkUpdate();
-            updateToBot.setId(updateToBot.getId());
-            updateToBot.setUrl(updateToBot.getUrl());
-            updateToBot.setTgChatIds(tgChats.stream().map(TgChat::getId).toList());
-            updateToBot.setDescription("GitHub repository was updated");
-            botClient.update(updateToBot);
+        if (answer.answerList().getFirst().time().isAfter(link.getLastCheckTime())) {
+            botClient.update(stackOverFlowService.formUpdate(answer, link, tgChats));
             return 1;
         }
 

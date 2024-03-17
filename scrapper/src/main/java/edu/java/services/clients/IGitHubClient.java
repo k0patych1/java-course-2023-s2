@@ -1,10 +1,10 @@
 package edu.java.services.clients;
 
+import edu.java.models.GitHubLastCommitInMainBranch;
 import edu.java.models.GitHubRepoLastUpdate;
-import edu.java.models.dto.Link;
 
 public interface IGitHubClient {
-    GitHubRepoLastUpdate fetchRepo(Link link);
+    GitHubRepoLastUpdate fetchRepo(String user, String repository);
 
-    String getInfoAboutUpdate(Link link);
+    GitHubLastCommitInMainBranch fetchRepoMainBranch(String user, String repository);
 }
