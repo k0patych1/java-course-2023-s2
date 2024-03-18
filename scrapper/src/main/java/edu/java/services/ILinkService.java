@@ -14,7 +14,5 @@ public interface ILinkService {
 
     List<Link> listAllWithChatId(Long chatId);
 
-    List<Link> listAll();
-
     List<Link> listOldChecked(OffsetDateTime interval);
 }

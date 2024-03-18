@@ -31,7 +31,7 @@ public class JdbcLinkService implements ILinkService {
             link = linkOptional.get();
         }
 
-        jdbcSubscriptionRepository.save(link.getId(), chatId);
+        jdbcSubscriptionRepository.save(chatId, link.getId());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class JdbcLinkService implements ILinkService {
     public boolean remove(URI url, Long chatId) {
         Link link = jdbcLinkRepository.findByUrl(url.toString()).orElseThrow();
 
-        boolean wasInTable = jdbcSubscriptionRepository.delete(link.getId(), chatId);
+        boolean wasInTable = jdbcSubscriptionRepository.delete(chatId, link.getId());
 
         if (wasInTable && jdbcSubscriptionRepository.findAllChatsWithLinkId(link.getId()).isEmpty()) {
             jdbcLinkRepository.delete(link.getId());
@@ -59,14 +59,7 @@ public class JdbcLinkService implements ILinkService {
     }
 
     @Override
-    public List<Link> listAll() {
-        return jdbcLinkRepository.findAll();
-    }
-
-    @Override
     public List<Link> listOldChecked(OffsetDateTime interval) {
         return jdbcLinkRepository.findAllByLastCheckTimeBefore(interval);
     }
-
-
 }

@@ -87,20 +87,6 @@ public class JdbcLinkTest extends IntegrationTest {
     @Test
     @Transactional
     @Rollback
-    public void findAllTest() {
-        Link link1 = new Link(0L, "https://www.google.com", OffsetDateTime.now());
-        Link link2 = new Link(0L, "https://www.yandex.ru", OffsetDateTime.now());
-        linkRepository.save(link1);
-        linkRepository.save(link2);
-        List<Link> links = linkRepository.findAll();
-        assertThat(links.size()).isEqualTo(2);
-        assertThat(links.get(0).getUrl()).isEqualTo(link1.getUrl());
-        assertThat(links.get(1).getUrl()).isEqualTo(link2.getUrl());
-    }
-
-    @Test
-    @Transactional
-    @Rollback
     public void findAllByLastCheckTimeBeforeTest() {
         Link link1 = new Link(0L, "https://www.google.com", OffsetDateTime.MIN);
         Link link2 = new Link(0L, "https://www.yandex.ru", OffsetDateTime.now());

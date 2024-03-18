@@ -1,12 +1,11 @@
 package edu.java.repositories.jdbc;
 
-import edu.java.repositories.ITgChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcTgChatRepository implements ITgChatRepository {
+public class JdbcTgChatRepository implements IJdbcTgChatRepository {
     private final JdbcClient jdbcClient;
 
     @Autowired
