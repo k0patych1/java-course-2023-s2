@@ -1,26 +1,24 @@
 package edu.java.scrapper.jdbcRepositories;
 
 import edu.java.models.dto.Link;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
+import edu.java.repositories.jdbc.IJdbcLinkRepository;
 import edu.java.scrapper.IntegrationTest;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class JdbcLinkTest extends IntegrationTest {
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private IJdbcLinkRepository linkRepository;
 
     @Autowired
     private JdbcClient jdbcClient;

@@ -1,6 +1,5 @@
 package edu.java.repositories.jooq;
 
-import edu.java.models.dto.TgChat;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;

@@ -3,6 +3,7 @@ package edu.java.controllers;
 import api.TgChatApi;
 import edu.java.services.ITgChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,9 +11,12 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequiredArgsConstructor
 public class ChatController implements TgChatApi {
     private final ITgChatService tgChatService;
+
+    public ChatController(@Qualifier("jdbcTgChatService") ITgChatService tgChatService) {
+        this.tgChatService = tgChatService;
+    }
 
     @Override
     public Mono<ResponseEntity<Void>> tgChatIdDelete(Long id, ServerWebExchange exchange) {

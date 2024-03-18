@@ -1,6 +1,5 @@
 package edu.java.repositories.jooq;
 
-import edu.java.domain.jooq.tables.records.LinkRecord;
 import edu.java.models.dto.Link;
 import java.time.OffsetDateTime;
 import java.util.List;

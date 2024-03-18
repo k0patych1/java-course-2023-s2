@@ -4,13 +4,13 @@ import edu.java.models.dto.Link;
 import edu.java.repositories.jooq.IJooqLinkRepository;
 import edu.java.repositories.jooq.IJooqSubscriptionRepository;
 import edu.java.services.ILinkService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

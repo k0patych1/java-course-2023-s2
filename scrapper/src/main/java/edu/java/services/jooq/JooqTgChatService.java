@@ -4,9 +4,9 @@ import edu.java.models.dto.TgChat;
 import edu.java.repositories.jooq.IJooqSubscriptionRepository;
 import edu.java.repositories.jooq.IJooqTgChatRepository;
 import edu.java.services.ITgChatService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
