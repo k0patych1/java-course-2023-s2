@@ -1,23 +1,24 @@
 package edu.java.services.jdbc;
 
 import edu.java.models.dto.Link;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
-import edu.java.repositories.jdbc.JdbcSubscriptionRepository;
+import edu.java.repositories.jdbc.IJdbcLinkRepository;
+import edu.java.repositories.jdbc.IJdbcSubscriptionRepository;
 import edu.java.services.ILinkService;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class JdbcLinkService implements ILinkService {
-    private final JdbcLinkRepository jdbcLinkRepository;
+    private final IJdbcLinkRepository jdbcLinkRepository;
 
-    private final JdbcSubscriptionRepository jdbcSubscriptionRepository;
+    private final IJdbcSubscriptionRepository jdbcSubscriptionRepository;
 
     @Override
     @Transactional
