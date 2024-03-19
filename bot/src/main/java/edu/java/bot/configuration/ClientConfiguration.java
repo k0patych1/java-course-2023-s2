@@ -6,7 +6,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class ClientConfiguration {
-    private static final String SCRAPPER_CLIENT_URL = "https://localhost:8080";
+    private static final String SCRAPPER_CLIENT_URL = "http://localhost:8080";
 
     @Bean
     public WebClient webClient() {

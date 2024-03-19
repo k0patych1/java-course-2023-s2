@@ -2,12 +2,15 @@ package edu.java.services.updaters;
 
 import edu.java.configuration.ApplicationConfig;
 import edu.java.models.dto.Link;
+import edu.java.models.dto.TgChat;
 import edu.java.services.ILinkService;
+import edu.java.services.ITgChatService;
 import edu.java.services.updaters.chain.UpdatersChain;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,12 +21,19 @@ public class LinkUpdater implements ILinkUpdater {
 
     private final ILinkService linkService;
 
+    private final ITgChatService tgChatService;
+
     @Autowired
-    public LinkUpdater(ApplicationConfig applicationConfig,
-        List<? extends UpdatersChain> updaters, ILinkService linkService) {
+    public LinkUpdater(
+        ApplicationConfig applicationConfig,
+        List<? extends UpdatersChain> updaters,
+        @Qualifier("jdbcLinkService") ILinkService linkService,
+        @Qualifier("jdbcTgChatService") ITgChatService tgChatService
+    ) {
         this.updaters = updaters;
         this.linkService = linkService;
         intervalOfCheck = applicationConfig.intervalCheckTime();
+        this.tgChatService = tgChatService;
     }
 
     @Override
@@ -33,7 +43,8 @@ public class LinkUpdater implements ILinkUpdater {
         for (Link link : links) {
             for (UpdatersChain updater : updaters) {
                 if (updater.canUpdate(link)) {
-                    cntUpdated += updater.update(link);
+                    List<TgChat> tgChats = tgChatService.listAllWithLink(link.getId());
+                    cntUpdated += updater.update(link, tgChats);
                     linkService.update(link.getId(), OffsetDateTime.now());
                 }
             }

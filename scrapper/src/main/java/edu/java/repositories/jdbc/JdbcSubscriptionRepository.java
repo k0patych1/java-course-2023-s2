@@ -2,13 +2,12 @@ package edu.java.repositories.jdbc;
 
 import edu.java.models.dto.Link;
 import edu.java.models.dto.TgChat;
-import edu.java.repositories.ISubscriptionRepository;
 import java.util.List;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class JdbcSubscriptionRepository implements ISubscriptionRepository {
+public class JdbcSubscriptionRepository implements IJdbcSubscriptionRepository {
     private final JdbcClient jdbcClient;
 
     public JdbcSubscriptionRepository(JdbcClient jdbcClient) {
@@ -26,10 +25,12 @@ public class JdbcSubscriptionRepository implements ISubscriptionRepository {
     }
 
     @Override
-    public void delete(Long chatId, Long linkId) {
-        jdbcClient.sql("DELETE FROM subscriptions WHERE chat_id = ? AND link_id = ?")
+    public boolean delete(Long chatId, Long linkId) {
+        int removed = jdbcClient.sql("DELETE FROM subscriptions WHERE chat_id = ? AND link_id = ?")
                 .params(chatId, linkId)
                 .update();
+
+        return removed > 0;
     }
 
     @Override

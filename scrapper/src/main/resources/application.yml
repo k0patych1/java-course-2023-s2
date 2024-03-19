@@ -1,7 +1,7 @@
 app:
   git-hub-base-url: https://api.github.com
   stack-over-flow-base-url: https://api.stackexchange.com
-  interval-check-time: 20000
+  interval-check-time: 1000000
   scheduler:
     enable: true
     interval: 10000
