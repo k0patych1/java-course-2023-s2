@@ -72,7 +72,7 @@ public class ClientsTest {
             .isEqualTo("test");
 
         assertThat(gitHubClient.fetchRepo(user, repository).time())
-            .isEqualTo("2023-02-06T04:58:53Z");
+            .isEqualTo("2023-02-25T14:25:39Z");
 
         wireMockRule.stop();
     }
