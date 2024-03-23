@@ -16,7 +16,7 @@ public class ExceptionControllerAdvice {
             .badRequest()
             .body(new ApiErrorResponse()
                 .code("400")
-                .description("Invalid updateк")
+                .description("Invalid update")
                 .exceptionName(e.getClass().getName())
                 .exceptionMessage(e.getMessage())
                 .stacktrace(Collections.singletonList(Arrays.asList(e.getStackTrace()).toString()))).getBody();
