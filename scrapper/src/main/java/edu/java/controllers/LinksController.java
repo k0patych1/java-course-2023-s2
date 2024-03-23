@@ -5,7 +5,6 @@ import edu.java.models.dto.Link;
 import edu.java.services.ILinkService;
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 import model.AddLinkRequest;
 import model.LinkResponse;
 import model.ListLinksResponse;
@@ -33,17 +32,19 @@ public class LinksController implements LinksApi {
         Mono<RemoveLinkRequest> removeLinkRequest,
         ServerWebExchange exchange
     ) {
-        URI url = Objects.requireNonNull(removeLinkRequest.block()).getLink();
+        return removeLinkRequest.flatMap(request -> {
+            URI url = request.getLink();
 
-        if (!linkService.remove(url, tgChatId)) {
-            return Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        }
+            if (!linkService.remove(url, tgChatId)) {
+                return Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            }
 
-        LinkResponse linkResponse = new LinkResponse();
-        linkResponse.setId(tgChatId);
-        linkResponse.setUrl(url);
+            LinkResponse linkResponse = new LinkResponse();
+            linkResponse.setId(tgChatId);
+            linkResponse.setUrl(url);
 
-        return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+            return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+        });
     }
 
     @Override
@@ -73,12 +74,14 @@ public class LinksController implements LinksApi {
         Mono<AddLinkRequest> addLinkRequest,
         ServerWebExchange exchange
     ) {
-        URI url = Objects.requireNonNull(addLinkRequest.block()).getLink();
-        linkService.add(url, tgChatId);
-        LinkResponse linkResponse = new LinkResponse();
-        linkResponse.setId(tgChatId);
-        linkResponse.setUrl(url);
+        return addLinkRequest.flatMap(request -> {
+            URI url = request.getLink();
+            linkService.add(url, tgChatId);
+            LinkResponse linkResponse = new LinkResponse();
+            linkResponse.setId(tgChatId);
+            linkResponse.setUrl(url);
 
-        return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+            return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+        });
     }
 }

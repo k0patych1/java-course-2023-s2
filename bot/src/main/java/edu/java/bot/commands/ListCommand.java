@@ -30,7 +30,11 @@ public class ListCommand implements Command {
     public SendMessage handle(Update update) {
         ListLinksResponse links = scrapperClient.getLinks(update.message().chat().id());
 
-        StringBuilder responseText = new StringBuilder("Tracked links:\n");
+        if (links.getSize() == 0) {
+            return new SendMessage(update.message().chat().id(), "Right now you are not tracking any links.");
+        }
+
+        StringBuilder responseText = new StringBuilder("Tracking links: ");
 
         for (LinkResponse link : links.getLinks()) {
             responseText.append(link.getUrl().toString())

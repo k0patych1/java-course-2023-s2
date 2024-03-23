@@ -7,7 +7,7 @@ public record GitHubRepoLastUpdate(
     @JsonProperty("name")
      String name,
 
-     @JsonProperty("updated_at")
+     @JsonProperty("pushed_at")
      OffsetDateTime time
     ){
 }

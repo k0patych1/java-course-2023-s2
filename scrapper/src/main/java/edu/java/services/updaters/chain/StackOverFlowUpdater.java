@@ -34,7 +34,7 @@ public class StackOverFlowUpdater implements UpdatersChain {
 
         StackOverFlowLastAnswer answer = stackOverFlowClient.fetchQuestion(questionId);
 
-        if (answer.answerList().getFirst().time().isAfter(link.getLastCheckTime())) {
+        if (!answer.answerList().isEmpty() && answer.answerList().getFirst().time().isAfter(link.getLastCheckTime())) {
             botClient.update(stackOverFlowService.formUpdate(answer, link, tgChats));
             return 1;
         }

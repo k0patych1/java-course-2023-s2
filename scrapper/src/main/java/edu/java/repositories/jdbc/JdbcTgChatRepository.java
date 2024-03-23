@@ -22,7 +22,10 @@ public class JdbcTgChatRepository implements IJdbcTgChatRepository {
 
     @Override
     public void save(Long id) {
-        jdbcClient.sql("INSERT INTO chat (id) VALUES (?)")
+        jdbcClient.sql("""
+                INSERT INTO chat (id) VALUES (?)
+                ON CONFLICT (id) DO NOTHING;
+                """)
             .param(id)
             .update();
     }
