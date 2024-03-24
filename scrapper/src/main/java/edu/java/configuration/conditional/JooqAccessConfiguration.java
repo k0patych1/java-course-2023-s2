@@ -10,7 +10,10 @@ import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqTgChatService;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
+import org.jooq.conf.RenderQuotedNames;
+import org.jooq.impl.DefaultConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jooq.DefaultConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
