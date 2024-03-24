@@ -6,9 +6,13 @@ app:
     enable: true
     interval: 10000
     force-check-delay: 10000
-  database-access-type: jpa
+  database-access-type:
+
 
 spring:
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     enabled: false
   application:
