@@ -8,9 +8,8 @@ import edu.java.repositories.jooq.IJooqTgChatRepository;
 import edu.java.services.ITgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JooqTgChatService implements ITgChatService {
     private final IJooqTgChatRepository jooqTgChatRepository;
@@ -25,6 +24,7 @@ public class JooqTgChatService implements ITgChatService {
     }
 
     @Override
+    @Transactional
     public void unregister(Long tgChatId) {
         List<Link> trackedLinks = jooqSubscriptionRepository.findAllLinksWithChatId(tgChatId);
         trackedLinks.forEach(link -> {

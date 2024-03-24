@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 @Table(name = "chat")
 public class TgChat {
-
     @Id
     private Long id;
 }

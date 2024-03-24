@@ -8,10 +8,8 @@ import edu.java.repositories.jdbc.IJdbcTgChatRepository;
 import edu.java.services.ITgChatService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcTgChatService implements ITgChatService {
     private final IJdbcTgChatRepository jdbcTgChatRepository;

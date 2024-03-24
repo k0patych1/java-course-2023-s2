@@ -5,12 +5,11 @@ import edu.java.models.dto.Link;
 import edu.java.services.ILinkService;
 import java.net.URI;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import model.AddLinkRequest;
 import model.LinkResponse;
 import model.ListLinksResponse;
 import model.RemoveLinkRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,13 +17,9 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequiredArgsConstructor
 public class LinksController implements LinksApi {
     private final ILinkService linkService;
-
-    @Autowired
-    public LinksController(@Qualifier("jdbcLinkService") ILinkService linkService) {
-        this.linkService = linkService;
-    }
 
     @Override
     public Mono<ResponseEntity<LinkResponse>> linksDelete(

@@ -1,17 +1,11 @@
 package edu.java.repositories.jdbc;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Repository;
 
-@Repository
+@RequiredArgsConstructor
 public class JdbcTgChatRepository implements IJdbcTgChatRepository {
     private final JdbcClient jdbcClient;
-
-    @Autowired
-    public JdbcTgChatRepository(JdbcClient jdbcClient) {
-        this.jdbcClient = jdbcClient;
-    }
 
     @Override
     public void delete(Long id) {
