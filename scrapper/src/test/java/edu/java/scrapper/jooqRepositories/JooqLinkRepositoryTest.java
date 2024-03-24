@@ -54,7 +54,7 @@ public class JooqLinkRepositoryTest {
     @Transactional
     @Rollback
     public void updateTest() {
-        OffsetDateTime startTime = OffsetDateTime.MIN;
+        OffsetDateTime startTime = OffsetDateTime.now().minusDays(10);
         Link link = new Link(0L, "https://www.google.com", startTime);
         Link savedLink = jooqLinkRepository.save(link);
         OffsetDateTime updateTime = OffsetDateTime.now();
@@ -82,7 +82,7 @@ public class JooqLinkRepositoryTest {
     @Transactional
     @Rollback
     public void findAllByLastCheckTimeBeforeTest() {
-        Link link1 = new Link(0L, "https://www.google.com", OffsetDateTime.MIN);
+        Link link1 = new Link(0L, "https://www.google.com", OffsetDateTime.now().minusDays(10));
         Link link2 = new Link(0L, "https://www.yandex.ru", OffsetDateTime.now());
         jooqLinkRepository.save(link1);
         jooqLinkRepository.save(link2);
