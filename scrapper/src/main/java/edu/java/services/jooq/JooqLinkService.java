@@ -9,10 +9,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JooqLinkService implements ILinkService {
     private final IJooqLinkRepository jooqLinkRepository;
@@ -36,6 +34,7 @@ public class JooqLinkService implements ILinkService {
     }
 
     @Override
+    @Transactional
     public boolean remove(URI url, Long chatId) {
         Link link = jooqLinkRepository.findByUrl(url.toString()).orElseThrow();
 

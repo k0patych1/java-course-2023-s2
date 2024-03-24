@@ -5,10 +5,8 @@ import edu.java.models.dto.TgChat;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
 import static edu.java.domain.jooq.Tables.SUBSCRIPTIONS;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqSubscriptionRepository implements IJooqSubscriptionRepository {
     private final DSLContext dslContext;

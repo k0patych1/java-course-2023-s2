@@ -4,16 +4,12 @@ import edu.java.models.dto.Link;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Repository;
 
-@Repository
+@RequiredArgsConstructor
 public class JdbcLinkRepository implements IJdbcLinkRepository {
     private final JdbcClient jdbcClient;
-
-    public JdbcLinkRepository(JdbcClient jdbcClient) {
-        this.jdbcClient = jdbcClient;
-    }
 
     @Override
     public Link save(Link link) {
