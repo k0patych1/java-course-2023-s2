@@ -2,6 +2,7 @@ package edu.java.repositories.jooq;
 
 import edu.java.models.dto.Link;
 import edu.java.models.dto.TgChat;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
@@ -16,6 +17,7 @@ public class JooqSubscriptionRepository implements IJooqSubscriptionRepository {
         dslContext.insertInto(SUBSCRIPTIONS)
             .set(SUBSCRIPTIONS.CHAT_ID, chatId)
             .set(SUBSCRIPTIONS.LINK_ID, linkId)
+            .set(SUBSCRIPTIONS.CREATED_AT, OffsetDateTime.now())
             .execute();
     }
 

@@ -4,7 +4,6 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import edu.java.models.GitHubLastCommitInMainBranch;
 import edu.java.models.StackOverFlowLastAnswer;
-import edu.java.models.dto.Link;
 import edu.java.models.dto.request.LinkUpdate;
 import edu.java.services.clients.BotClient;
 import edu.java.services.clients.GitHubClient;
@@ -13,9 +12,7 @@ import edu.java.services.clients.IGitHubClient;
 import edu.java.services.clients.IStackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClient;
 import java.net.URI;
-import java.time.OffsetDateTime;
 import java.util.Arrays;
-import edu.java.services.parsers.GitHubUrlParser;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -52,13 +49,13 @@ public class ClientsTest {
         String endpoint = "/repos/" + user + '/' + repository;
 
         String body = """
-                {
-                "id": 1,
-                "name": "test",
-                "updated_at": "2023-02-06T04:58:53Z",
-                "pushed_at": "2023-02-25T14:25:39Z"
-                }
-                """;
+            {
+            "id": 1,
+            "name": "test",
+            "updated_at": "2023-02-06T04:58:53Z",
+            "pushed_at": "2023-02-25T14:25:39Z"
+            }
+            """;
 
         stubForGet(endpoint, body);
 
@@ -111,7 +108,6 @@ public class ClientsTest {
 
         IGitHubClient gitHubClient = new GitHubClient(mockWebClient);
 
-
         GitHubLastCommitInMainBranch lastCommit = gitHubClient.fetchRepoMainBranch(user, repository);
 
         assertThat(lastCommit.commit().committer().name())
@@ -139,7 +135,8 @@ public class ClientsTest {
         String questionId = "239";
 
         String baseMockUrl = wireMockRule.baseUrl();
-        String endpoint = "/questions/" + questionId + "/answers?order=desc&sort=activity&site=stackoverflow&filter=withbody";
+        String endpoint =
+            "/questions/" + questionId + "/answers?order=desc&sort=activity&site=stackoverflow&filter=withbody";
 
         String body = """
             {
