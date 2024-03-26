@@ -9,6 +9,7 @@ import edu.java.repositories.jpa.IJpaTgChatRepository;
 import edu.java.services.ILinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,15 @@ public class JpaLinkService implements ILinkService {
     @Override
     @Transactional
     public void add(URI url, Long chatId) {
+        if (subscriptionRepository.findByUrlAndChatId(url.toString(), chatId).isPresent()) {
+            return;
+        }
+
         Optional<Link> linkOptional = linkRepository.findByUrl(url.toString());
         Link link = new Link();
         if (linkOptional.isEmpty()) {
             link.setUrl(url.toString());
             link.setLastCheckTime(OffsetDateTime.now());
-            link = linkRepository.saveAndFlush(link);
         } else {
             link = linkOptional.get();
         }
@@ -44,7 +48,6 @@ public class JpaLinkService implements ILinkService {
         } else {
             chat = new TgChat();
             chat.setId(chatId);
-            tgChatRepository.saveAndFlush(chat);
         }
 
         subscription.setChat(chat);
@@ -63,7 +66,14 @@ public class JpaLinkService implements ILinkService {
             return false;
         }
 
+        Link link = subscriptionOptional.get().getLink();
+
         subscriptionRepository.deleteById(subscriptionOptional.get().getId());
+        linkRepository.flush();
+
+        if (link.getSubscriptions().isEmpty()) {
+            linkRepository.delete(link);
+        }
 
         return true;
     }
@@ -73,21 +83,21 @@ public class JpaLinkService implements ILinkService {
     public void update(Long linkId, OffsetDateTime lastCheckedAt) {
         Link link = linkRepository.findById(linkId).orElseThrow();
         link.setLastCheckTime(lastCheckedAt);
-        linkRepository.save(link);
     }
 
     @Override
     @Transactional
     public List<edu.java.models.dto.Link> listAllWithChatId(Long chatId) {
-        List<Subscription> subscriptions = subscriptionRepository.findAllByTgChatId(chatId);
+        Optional<TgChat> tgChat = tgChatRepository.findById(chatId);
 
-        return subscriptions.stream()
-            .map(subscription -> mapToDto(subscription.getLink()))
-            .toList();
+        return tgChat.map(chat -> chat.getSubscriptions()
+            .stream()
+            .map((subscription) -> mapToDto(subscription.getLink()))
+            .toList()).orElse(Collections.emptyList());
+
     }
 
     @Override
-    @Transactional
     public List<edu.java.models.dto.Link> listOldChecked(OffsetDateTime interval) {
         List<Link> links = linkRepository.findAllByLastCheckTimeBefore(interval);
 

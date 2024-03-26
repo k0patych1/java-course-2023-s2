@@ -2,9 +2,9 @@ package edu.java.scrapper.jpaRepositories;
 
 import edu.java.domain.jpa.Link;
 import edu.java.repositories.jpa.IJpaLinkRepository;
+import edu.java.scrapper.IntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

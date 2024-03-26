@@ -1,12 +1,16 @@
 package edu.java.domain.jpa;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.Data;
 
 @Entity
@@ -23,4 +27,7 @@ public class Link {
 
     @Column(name = "last_check_time", nullable = false)
     private OffsetDateTime lastCheckTime;
+
+    @OneToMany(mappedBy = "link", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Subscription> subscriptions;
 }

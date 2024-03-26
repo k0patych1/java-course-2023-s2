@@ -1,10 +1,12 @@
 package edu.java.services.jpa;
 
+import edu.java.domain.jpa.Link;
 import edu.java.domain.jpa.Subscription;
 import edu.java.domain.jpa.TgChat;
-import edu.java.repositories.jpa.IJpaSubscriptionRepository;
+import edu.java.repositories.jpa.IJpaLinkRepository;
 import edu.java.repositories.jpa.IJpaTgChatRepository;
 import edu.java.services.ITgChatService;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class JpaTgChatService implements ITgChatService {
     private final IJpaTgChatRepository tgChatRepository;
 
-    private final IJpaSubscriptionRepository subscriptionRepository;
+    private final IJpaLinkRepository linkRepository;
 
     @Override
+    @Transactional
     public void register(Long tgChatId) {
+        if (tgChatRepository.findById(tgChatId).isPresent()) {
+            return;
+        }
+
         TgChat tgChat = new TgChat();
         tgChat.setId(tgChatId);
         tgChatRepository.save(tgChat);
@@ -26,17 +33,20 @@ public class JpaTgChatService implements ITgChatService {
     @Override
     @Transactional
     public void unregister(Long tgChatId) {
-        Optional<TgChat> optionalTgChat = tgChatRepository.findById(tgChatId);
-
-        if (optionalTgChat.isPresent()) {
-            TgChat tgChat = optionalTgChat.get();
-            subscriptionRepository.deleteByTgChatId(tgChat.getId());
-        }
+        TgChat tgChat = tgChatRepository.findById(tgChatId).orElseThrow();
+        tgChat.getSubscriptions().clear();
     }
 
     @Override
+    @Transactional
     public List<edu.java.models.dto.TgChat> listAllWithLink(Long linkId) {
-        List<Subscription> subscriptions = subscriptionRepository.findAllByLinkId(linkId);
+        Optional<Link> link = linkRepository.findById(linkId);
+
+        if (link.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<Subscription> subscriptions = link.get().getSubscriptions();
 
         return subscriptions.stream()
             .map(subscription -> mapToDto(subscription.getChat()))
