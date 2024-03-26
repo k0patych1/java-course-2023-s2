@@ -1,6 +1,9 @@
 package edu.java.configuration;
 
 import java.util.Optional;
+import org.jooq.conf.RenderQuotedNames;
+import org.jooq.impl.DefaultConfiguration;
+import org.springframework.boot.autoconfigure.jooq.DefaultConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -9,7 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ClientConfiguration {
     private static final String GIT_HUB_BASE_URL = "https://api.github.com";
     private static final String STACK_OVER_FLOW_BASE_URL = "https://api.stackexchange.com";
-    private static final String BOT_URL = "https://localhost:8090";
+    private static final String BOT_URL = "http://localhost:8090";
 
     @Bean
     public WebClient gitHubWebClient(ApplicationConfig applicationConfig) {
@@ -36,5 +39,13 @@ public class ClientConfiguration {
         return WebClient.builder()
             .baseUrl(BOT_URL)
             .build();
+    }
+
+    @Bean
+    public DefaultConfigurationCustomizer postgresJooqCustomizer() {
+        return (DefaultConfiguration c) -> c.settings()
+            .withRenderSchema(false)
+            .withRenderFormatted(true)
+            .withRenderQuotedNames(RenderQuotedNames.NEVER);
     }
 }

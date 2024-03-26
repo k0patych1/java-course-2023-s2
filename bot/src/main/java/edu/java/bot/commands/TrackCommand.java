@@ -2,21 +2,22 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.models.dto.request.AddLinkRequest;
+import edu.java.bot.services.clients.IScrapperClient;
 import edu.java.bot.services.validators.ValidatorRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.net.URI;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TrackCommand implements Command {
     private static final String COMMAND_NAME = "/track";
     private static final String COMMAND_DESCRIPTION = "start tracking the link";
 
     private final ValidatorRepo linkValidator;
 
-    @Autowired
-    public TrackCommand(ValidatorRepo linkValidator) {
-        this.linkValidator = linkValidator;
-    }
+    private final IScrapperClient scrapperClient;
 
     @Override
     public String command() {
@@ -47,7 +48,10 @@ public class TrackCommand implements Command {
             responseText = "Please provide a correct supportable link";
         }
 
-        //todo logic of tracking url (repository of tracking urls)
+        AddLinkRequest addLinkRequest = new AddLinkRequest();
+        addLinkRequest.setLink(URI.create(trackedLink));
+
+        scrapperClient.addLink(update.message().chat().id(), addLinkRequest);
 
         return new SendMessage(update.message().chat().id(), responseText);
     }

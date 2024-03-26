@@ -2,18 +2,13 @@ package edu.java.repositories.jdbc;
 
 import edu.java.models.dto.Link;
 import edu.java.models.dto.TgChat;
-import edu.java.repositories.ISubscriptionRepository;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class JdbcSubscriptionRepository implements ISubscriptionRepository {
+@RequiredArgsConstructor
+public class JdbcSubscriptionRepository implements IJdbcSubscriptionRepository {
     private final JdbcClient jdbcClient;
-
-    public JdbcSubscriptionRepository(JdbcClient jdbcClient) {
-        this.jdbcClient = jdbcClient;
-    }
 
     @Override
     public void save(Long chatId, Long linkId) {
@@ -21,15 +16,17 @@ public class JdbcSubscriptionRepository implements ISubscriptionRepository {
                 INSERT INTO subscriptions (chat_id, link_id, created_at)
                 VALUES (?, ?, current_timestamp)
                 """)
-                .params(chatId, linkId)
-                .update();
+            .params(chatId, linkId)
+            .update();
     }
 
     @Override
-    public void delete(Long chatId, Long linkId) {
-        jdbcClient.sql("DELETE FROM subscriptions WHERE chat_id = ? AND link_id = ?")
-                .params(chatId, linkId)
-                .update();
+    public boolean delete(Long chatId, Long linkId) {
+        int removed = jdbcClient.sql("DELETE FROM subscriptions WHERE chat_id = ? AND link_id = ?")
+            .params(chatId, linkId)
+            .update();
+
+        return removed > 0;
     }
 
     @Override

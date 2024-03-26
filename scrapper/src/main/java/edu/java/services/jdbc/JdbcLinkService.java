@@ -1,23 +1,21 @@
 package edu.java.services.jdbc;
 
 import edu.java.models.dto.Link;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
-import edu.java.repositories.jdbc.JdbcSubscriptionRepository;
+import edu.java.repositories.jdbc.IJdbcLinkRepository;
+import edu.java.repositories.jdbc.IJdbcSubscriptionRepository;
 import edu.java.services.ILinkService;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
 public class JdbcLinkService implements ILinkService {
-    private final JdbcLinkRepository jdbcLinkRepository;
+    private final IJdbcLinkRepository jdbcLinkRepository;
 
-    private final JdbcSubscriptionRepository jdbcSubscriptionRepository;
+    private final IJdbcSubscriptionRepository jdbcSubscriptionRepository;
 
     @Override
     @Transactional
@@ -31,19 +29,25 @@ public class JdbcLinkService implements ILinkService {
             link = linkOptional.get();
         }
 
-        jdbcSubscriptionRepository.save(link.getId(), chatId);
+        jdbcSubscriptionRepository.save(chatId, link.getId());
     }
 
     @Override
     @Transactional
-    public void remove(URI url, Long chatId) {
-        Link link = jdbcLinkRepository.findByUrl(url.toString()).orElseThrow();
+    public boolean remove(URI url, Long chatId) {
+        Optional<Link> link = jdbcLinkRepository.findByUrl(url.toString());
 
-        jdbcSubscriptionRepository.delete(link.getId(), chatId);
-
-        if (jdbcSubscriptionRepository.findAllChatsWithLinkId(link.getId()).isEmpty()) {
-            jdbcLinkRepository.delete(link.getId());
+        if (link.isEmpty()) {
+            return false;
         }
+
+        boolean wasInTable = jdbcSubscriptionRepository.delete(chatId, link.get().getId());
+
+        if (wasInTable && jdbcSubscriptionRepository.findAllChatsWithLinkId(link.get().getId()).isEmpty()) {
+            jdbcLinkRepository.delete(link.get().getId());
+        }
+
+        return wasInTable;
     }
 
     @Override
@@ -54,11 +58,6 @@ public class JdbcLinkService implements ILinkService {
     @Override
     public List<Link> listAllWithChatId(Long chatId) {
         return jdbcSubscriptionRepository.findAllLinksWithChatId(chatId);
-    }
-
-    @Override
-    public List<Link> listAll() {
-        return jdbcLinkRepository.findAll();
     }
 
     @Override

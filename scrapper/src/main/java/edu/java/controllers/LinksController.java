@@ -1,11 +1,11 @@
 package edu.java.controllers;
 
 import api.LinksApi;
+import edu.java.exceptions.LinkNotFoundException;
 import edu.java.models.dto.Link;
 import edu.java.services.ILinkService;
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import model.AddLinkRequest;
 import model.LinkResponse;
@@ -28,19 +28,24 @@ public class LinksController implements LinksApi {
         Mono<RemoveLinkRequest> removeLinkRequest,
         ServerWebExchange exchange
     ) {
-        URI url = Objects.requireNonNull(removeLinkRequest.block()).getLink();
-        linkService.remove(url, tgChatId);
-        LinkResponse linkResponse = new LinkResponse();
-        linkResponse.setId(tgChatId);
-        linkResponse.setUrl(url);
+        return removeLinkRequest.flatMap(request -> {
+            URI url = request.getLink();
 
-        return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+            if (!linkService.remove(url, tgChatId)) {
+                return Mono.error(new LinkNotFoundException("Link " + url.toString() + " doesnt' tracking"));
+            }
+
+            LinkResponse linkResponse = new LinkResponse();
+            linkResponse.setId(tgChatId);
+            linkResponse.setUrl(url);
+
+            return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+        });
     }
 
     @Override
     public Mono<ResponseEntity<ListLinksResponse>> linksGet(Long tgChatId, ServerWebExchange exchange) {
         List<Link> links = linkService.listAllWithChatId(tgChatId);
-
 
         ListLinksResponse response = new ListLinksResponse();
 
@@ -65,12 +70,14 @@ public class LinksController implements LinksApi {
         Mono<AddLinkRequest> addLinkRequest,
         ServerWebExchange exchange
     ) {
-        URI url = Objects.requireNonNull(addLinkRequest.block()).getLink();
-        linkService.add(url, tgChatId);
-        LinkResponse linkResponse = new LinkResponse();
-        linkResponse.setId(tgChatId);
-        linkResponse.setUrl(url);
+        return addLinkRequest.flatMap(request -> {
+            URI url = request.getLink();
+            linkService.add(url, tgChatId);
+            LinkResponse linkResponse = new LinkResponse();
+            linkResponse.setId(tgChatId);
+            linkResponse.setUrl(url);
 
-        return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+            return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+        });
     }
 }
