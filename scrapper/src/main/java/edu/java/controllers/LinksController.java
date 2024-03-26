@@ -1,6 +1,7 @@
 package edu.java.controllers;
 
 import api.LinksApi;
+import edu.java.exceptions.LinkNotFoundException;
 import edu.java.models.dto.Link;
 import edu.java.services.ILinkService;
 import java.net.URI;
@@ -31,7 +32,7 @@ public class LinksController implements LinksApi {
             URI url = request.getLink();
 
             if (!linkService.remove(url, tgChatId)) {
-                return Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                return Mono.error(new LinkNotFoundException("Link " + url.toString() + " doesnt' tracking"));
             }
 
             LinkResponse linkResponse = new LinkResponse();

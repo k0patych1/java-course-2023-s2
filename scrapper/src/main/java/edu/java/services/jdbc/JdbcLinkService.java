@@ -35,12 +35,16 @@ public class JdbcLinkService implements ILinkService {
     @Override
     @Transactional
     public boolean remove(URI url, Long chatId) {
-        Link link = jdbcLinkRepository.findByUrl(url.toString()).orElseThrow();
+        Optional<Link> link = jdbcLinkRepository.findByUrl(url.toString());
 
-        boolean wasInTable = jdbcSubscriptionRepository.delete(chatId, link.getId());
+        if (link.isEmpty()) {
+            return false;
+        }
 
-        if (wasInTable && jdbcSubscriptionRepository.findAllChatsWithLinkId(link.getId()).isEmpty()) {
-            jdbcLinkRepository.delete(link.getId());
+        boolean wasInTable = jdbcSubscriptionRepository.delete(chatId, link.get().getId());
+
+        if (wasInTable && jdbcSubscriptionRepository.findAllChatsWithLinkId(link.get().getId()).isEmpty()) {
+            jdbcLinkRepository.delete(link.get().getId());
         }
 
         return wasInTable;

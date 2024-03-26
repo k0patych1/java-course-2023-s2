@@ -19,6 +19,7 @@ public class JooqTgChatRepository implements IJooqTgChatRepository {
     public void save(Long id) {
         dsl.insertInto(CHAT)
             .set(CHAT.ID, id)
+            .onDuplicateKeyIgnore()
             .execute();
     }
 }
