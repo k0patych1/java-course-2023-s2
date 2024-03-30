@@ -5,6 +5,7 @@ import edu.java.models.dto.TgChat;
 import edu.java.repositories.jooq.IJooqLinkRepository;
 import edu.java.repositories.jooq.IJooqSubscriptionRepository;
 import edu.java.repositories.jooq.IJooqTgChatRepository;
+import edu.java.scrapper.IntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class JooqSubscriptionRepositoryTest {
+public class JooqSubscriptionRepositoryTest extends IntegrationTest {
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () -> "jooq");

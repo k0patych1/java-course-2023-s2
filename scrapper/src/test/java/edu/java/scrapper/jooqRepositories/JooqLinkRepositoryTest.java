@@ -2,6 +2,7 @@ package edu.java.scrapper.jooqRepositories;
 
 import edu.java.models.dto.Link;
 import edu.java.repositories.jooq.IJooqLinkRepository;
+import edu.java.scrapper.IntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class JooqLinkRepositoryTest {
+public class JooqLinkRepositoryTest extends IntegrationTest {
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("app.database-access-type", () -> "jooq");
