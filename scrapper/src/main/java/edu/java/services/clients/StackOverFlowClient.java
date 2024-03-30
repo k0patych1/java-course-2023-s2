@@ -1,6 +1,6 @@
 package edu.java.services.clients;
 
-import edu.java.models.StackOverFlowLastUpdate;
+import edu.java.models.StackOverFlowLastAnswer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,14 @@ public class StackOverFlowClient implements IStackOverFlowClient {
         this.webClient = webClient;
     }
 
-    public StackOverFlowLastUpdate fetchQuestion(String questionId) {
+    @Override
+    public StackOverFlowLastAnswer fetchQuestion(String questionId) {
         return webClient
             .get()
-            .uri("/questions/{questionId}?order=desc&sort=activity&site=stackoverflow",
+            .uri("/questions/{questionId}/answers?order=desc&sort=activity&site=stackoverflow&filter=withbody",
                 questionId)
             .retrieve()
-            .bodyToMono(StackOverFlowLastUpdate.class)
+            .bodyToMono(StackOverFlowLastAnswer.class)
             .block();
     }
 }

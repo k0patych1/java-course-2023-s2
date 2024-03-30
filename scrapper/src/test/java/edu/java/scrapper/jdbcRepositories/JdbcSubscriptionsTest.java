@@ -2,12 +2,12 @@ package edu.java.scrapper.jdbcRepositories;
 
 import edu.java.models.dto.Link;
 import edu.java.models.dto.TgChat;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
-import edu.java.repositories.jdbc.JdbcSubscriptionRepository;
-import edu.java.repositories.jdbc.JdbcTgChatRepository;
+import edu.java.repositories.jdbc.IJdbcLinkRepository;
+import edu.java.repositories.jdbc.IJdbcSubscriptionRepository;
+import edu.java.repositories.jdbc.IJdbcTgChatRepository;
+import edu.java.scrapper.IntegrationTest;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.scrapper.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,20 +20,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 public class JdbcSubscriptionsTest extends IntegrationTest {
     @Autowired
-    private JdbcSubscriptionRepository subscriptionRepository;
+    private IJdbcSubscriptionRepository subscriptionRepository;
 
     @Autowired
-    private JdbcTgChatRepository chatRepository;
+    private IJdbcTgChatRepository chatRepository;
 
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private IJdbcLinkRepository linkRepository;
 
     @Test
     @Transactional
     @Rollback
     public void incorrectSaveTest() {
         assertThatThrownBy(() -> subscriptionRepository.save(1L, 1L))
-                .isInstanceOf(Exception.class);
+            .isInstanceOf(Exception.class);
     }
 
     @Test
@@ -43,8 +43,8 @@ public class JdbcSubscriptionsTest extends IntegrationTest {
         chatRepository.save(1L);
         chatRepository.save(2L);
 
-        Link link1 = linkRepository.save(new Link(666L, "https://www.google.com",  OffsetDateTime.now()));
-        Link link2 = linkRepository.save(new Link(666L, "https://github.com",  OffsetDateTime.now()));
+        Link link1 = linkRepository.save(new Link(666L, "https://www.google.com", OffsetDateTime.now()));
+        Link link2 = linkRepository.save(new Link(666L, "https://github.com", OffsetDateTime.now()));
 
         subscriptionRepository.save(1L, link1.getId());
         subscriptionRepository.save(1L, link2.getId());
@@ -65,7 +65,7 @@ public class JdbcSubscriptionsTest extends IntegrationTest {
     public void deleteTest() {
         chatRepository.save(1L);
 
-        Link link = linkRepository.save(new Link(666L, "https://www.google.com",  OffsetDateTime.now()));
+        Link link = linkRepository.save(new Link(666L, "https://www.google.com", OffsetDateTime.now()));
 
         subscriptionRepository.save(1L, link.getId());
 
@@ -84,7 +84,7 @@ public class JdbcSubscriptionsTest extends IntegrationTest {
     public void cascadeDeleteOnTgChatTest() {
         chatRepository.save(1L);
 
-        Link link = linkRepository.save(new Link(666L, "https://www.google.com",  OffsetDateTime.now()));
+        Link link = linkRepository.save(new Link(666L, "https://www.google.com", OffsetDateTime.now()));
 
         subscriptionRepository.save(1L, link.getId());
 
@@ -103,7 +103,7 @@ public class JdbcSubscriptionsTest extends IntegrationTest {
     public void cascadeDeleteOnLinkTest() {
         chatRepository.save(1L);
 
-        Link link = linkRepository.save(new Link(666L, "https://www.google.com",  OffsetDateTime.now()));
+        Link link = linkRepository.save(new Link(666L, "https://www.google.com", OffsetDateTime.now()));
 
         subscriptionRepository.save(1L, link.getId());
 

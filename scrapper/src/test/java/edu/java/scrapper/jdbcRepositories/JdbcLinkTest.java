@@ -1,26 +1,24 @@
 package edu.java.scrapper.jdbcRepositories;
 
 import edu.java.models.dto.Link;
-import edu.java.repositories.jdbc.JdbcLinkRepository;
+import edu.java.repositories.jdbc.IJdbcLinkRepository;
 import edu.java.scrapper.IntegrationTest;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class JdbcLinkTest extends IntegrationTest {
     @Autowired
-    private JdbcLinkRepository linkRepository;
+    private IJdbcLinkRepository linkRepository;
 
     @Autowired
     private JdbcClient jdbcClient;
@@ -82,20 +80,6 @@ public class JdbcLinkTest extends IntegrationTest {
         assertThat(savedLink.get().getUrl()).isEqualTo(link.getUrl());
         assertThat(savedLink.get().getLastCheckTime()).isNotNull();
         assertThat(savedLink.get().getId()).isNotNull();
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    public void findAllTest() {
-        Link link1 = new Link(0L, "https://www.google.com", OffsetDateTime.now());
-        Link link2 = new Link(0L, "https://www.yandex.ru", OffsetDateTime.now());
-        linkRepository.save(link1);
-        linkRepository.save(link2);
-        List<Link> links = linkRepository.findAll();
-        assertThat(links.size()).isEqualTo(2);
-        assertThat(links.get(0).getUrl()).isEqualTo(link1.getUrl());
-        assertThat(links.get(1).getUrl()).isEqualTo(link2.getUrl());
     }
 
     @Test

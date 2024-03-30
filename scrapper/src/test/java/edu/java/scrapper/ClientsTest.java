@@ -2,6 +2,9 @@ package edu.java.scrapper;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import edu.java.models.GitHubLastCommitInMainBranch;
+import edu.java.models.StackOverFlowLastAnswer;
+import edu.java.models.dto.Link;
 import edu.java.models.dto.request.LinkUpdate;
 import edu.java.services.clients.BotClient;
 import edu.java.services.clients.GitHubClient;
@@ -10,7 +13,9 @@ import edu.java.services.clients.IGitHubClient;
 import edu.java.services.clients.IStackOverFlowClient;
 import edu.java.services.clients.StackOverFlowClient;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.Arrays;
+import edu.java.services.parsers.GitHubUrlParser;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,11 +42,11 @@ public class ClientsTest {
     }
 
     @Test
-    public void gitHubTest() {
+    public void gitHubClientLastUpdateTest() {
         wireMockRule.start();
 
         String user = "user";
-        String repository = "tink";
+        String repository = "test";
 
         String baseMockUrl = wireMockRule.baseUrl();
         String endpoint = "/repos/" + user + '/' + repository;
@@ -63,48 +68,90 @@ public class ClientsTest {
 
         IGitHubClient gitHubClient = new GitHubClient(mockWebClient);
 
-        assertThat(gitHubClient.fetchRepo(user, repository).name()).isEqualTo("test");
-        assertThat(gitHubClient.fetchRepo(user, repository).time()).isEqualTo("2023-02-06T04:58:53Z");
+        assertThat(gitHubClient.fetchRepo(user, repository).name())
+            .isEqualTo("test");
+
+        assertThat(gitHubClient.fetchRepo(user, repository).time())
+            .isEqualTo("2023-02-06T04:58:53Z");
 
         wireMockRule.stop();
     }
 
     @Test
-    public void stackOverFlowTest() {
+    public void gitHubClientTest() {
+        wireMockRule.start();
+
+        String user = "user";
+        String repository = "tink";
+
+        String baseMockUrl = wireMockRule.baseUrl();
+        String endpoint = "/repos/" + user + '/' + repository + "/commits/main";
+
+        String body = """
+            {
+              "commit": {
+                "committer": {
+                  "name": "k0patych1",
+                  "date": "2024-03-17T14:22:29Z"
+                },
+                "message": "second"
+              },
+              "stats": {
+                "additions": 1,
+                "deletions": 2
+              }
+            }
+            """;
+
+        stubForGet(endpoint, body);
+
+        WebClient mockWebClient = WebClient.builder()
+            .baseUrl(baseMockUrl)
+            .build();
+
+        IGitHubClient gitHubClient = new GitHubClient(mockWebClient);
+
+
+        GitHubLastCommitInMainBranch lastCommit = gitHubClient.fetchRepoMainBranch(user, repository);
+
+        assertThat(lastCommit.commit().committer().name())
+            .isEqualTo("k0patych1");
+
+        assertThat(lastCommit.commit().message())
+            .isEqualTo("second");
+
+        assertThat(lastCommit.stats().additions())
+            .isEqualTo(1);
+
+        assertThat(lastCommit.stats().deletions())
+            .isEqualTo(2);
+
+        assertThat(lastCommit.commit().committer().time())
+            .isEqualTo("2024-03-17T14:22:29Z");
+
+        wireMockRule.stop();
+    }
+
+    @Test
+    public void stackOverFlowClientTest() {
         wireMockRule.start();
 
         String questionId = "239";
 
         String baseMockUrl = wireMockRule.baseUrl();
-        String endpoint = "/questions/" + questionId + "?order=desc&sort=activity&site=stackoverflow";
+        String endpoint = "/questions/" + questionId + "/answers?order=desc&sort=activity&site=stackoverflow&filter=withbody";
 
         String body = """
             {
-              "items": [
-                {
-                  "owner": {
-                    "account_id": 6190832,
-                    "reputation": 1,
-                    "user_id": 8864250,
-                    "user_type": "registered",
-                    "profile_image": "https://www.gravatar.com/avatar/99d6dabd828c69adff3956c9167a06de?s=256&d=identicon&r=PG&f=y&so-version=2",
-                    "display_name": "Ivan Ivanov",
-                    "link": "https://stackoverflow.com/users/8864250/ivan-ivanov"
-                  },
-                  "is_accepted": false,
-                  "score": -1,
-                  "last_activity_date": 1708876663,
-                  "last_edit_date": 1708876663,
-                  "creation_date": 1708873762,
-                  "answer_id": 78056465,
-                  "question_id": 6429462,
-                  "content_license": "CC BY-SA 4.0"
-                }
-              ],
-              "has_more": true,
-              "quota_max": 10000,
-              "quota_remaining": 9953
-            }
+                   "items": [
+                     {
+                       "owner": {
+                         "display_name": "Afsar"
+                       },
+                       "score": 10,
+                       "creation_date": 1709759290                     }
+                   ]
+                 }
             """;
 
         stubForGet(endpoint, body);
@@ -115,11 +162,18 @@ public class ClientsTest {
 
         IStackOverFlowClient gitHubClient = new StackOverFlowClient(mockWebClient);
 
-        assertThat(gitHubClient.fetchQuestion(questionId)
-            .answerList().
-            getFirst()
-            .time())
-            .isEqualTo("2024-02-25T15:57:43Z");
+        StackOverFlowLastAnswer.Answer answer = gitHubClient.fetchQuestion(questionId)
+            .answerList()
+            .getFirst();
+
+        assertThat(answer.time())
+            .isEqualTo("2024-03-06T21:08:10Z");
+
+        assertThat(answer.owner().displayName())
+            .isEqualTo("Afsar");
+
+        assertThat(answer.score())
+            .isEqualTo(10);
 
         wireMockRule.stop();
     }

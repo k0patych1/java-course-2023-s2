@@ -5,15 +5,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GitHubUrlParser {
-    public boolean isGitHubUrl(URI url) {
-        return url.getHost().equals("github.com");
+    public boolean isGitHubUrl(String url) {
+        URI uri = URI.create(url);
+        return uri.getHost().equals("github.com");
     }
 
-    public String getUserName(URI url) {
-        return url.getPath().split("/")[1];
+    public String getUserName(String url) {
+        URI uri = URI.create(url);
+        return uri.getPath().split("/")[1];
     }
 
-    public String getRepositoryName(URI url) {
-        return url.getPath().split("/")[2];
+    public String getRepositoryName(String url) {
+        URI uri = URI.create(url);
+        return uri.getPath().split("/")[2];
     }
 }

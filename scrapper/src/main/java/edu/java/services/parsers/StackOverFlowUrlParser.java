@@ -5,7 +5,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StackOverFlowUrlParser {
-    public String getQuestionId(URI url) {
-        return url.getPath().split("/")[2];
+    public boolean isStackOverFlowUrl(String url) {
+        URI uri = URI.create(url);
+        return uri.getHost().equals("stackoverflow.com");
+    }
+
+    public String getQuestionId(String url) {
+        URI uri = URI.create(url);
+        return uri.getPath().split("/")[2];
     }
 }

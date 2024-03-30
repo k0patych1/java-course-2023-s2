@@ -1,5 +1,6 @@
 package edu.java.services.clients;
 
+import edu.java.models.GitHubLastCommitInMainBranch;
 import edu.java.models.GitHubRepoLastUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +22,14 @@ public class GitHubClient implements IGitHubClient {
             .uri("/repos/{user}/{repository}", user, repository)
             .retrieve()
             .bodyToMono(GitHubRepoLastUpdate.class)
+            .block();
+    }
+
+    public GitHubLastCommitInMainBranch fetchRepoMainBranch(String user, String repository) {
+        return webClient.get()
+            .uri("/repos/{user}/{repository}/commits/main", user, repository)
+            .retrieve()
+            .bodyToMono(GitHubLastCommitInMainBranch.class)
             .block();
     }
 }

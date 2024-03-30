@@ -1,7 +1,7 @@
 package edu.java.services.clients;
 
-import edu.java.models.StackOverFlowLastUpdate;
+import edu.java.models.StackOverFlowLastAnswer;
 
 public interface IStackOverFlowClient {
-    StackOverFlowLastUpdate fetchQuestion(String questionId);
+    StackOverFlowLastAnswer fetchQuestion(String questionId);
 }
