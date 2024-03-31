@@ -5,7 +5,6 @@ import edu.java.bot.models.dto.request.RemoveLinkRequest;
 import edu.java.bot.models.dto.response.LinkResponse;
 import edu.java.bot.models.dto.response.ListLinksResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
