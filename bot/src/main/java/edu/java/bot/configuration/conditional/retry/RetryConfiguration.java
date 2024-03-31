@@ -1,6 +1,6 @@
-package edu.java.configuration.conditional;
+package edu.java.bot.configuration.conditional.retry;
 
-import edu.java.configuration.ApplicationConfig;
+import edu.java.bot.configuration.ApplicationConfig;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -51,7 +51,7 @@ public class RetryConfiguration {
     private boolean filter(Throwable throwable) {
         return throwable instanceof WebClientResponseException exception
             && applicationConfig.retryPolicy()
-                .retryCodes()
-                .contains(exception.getStatusCode().value());
+            .retryCodes()
+            .contains(exception.getStatusCode().value());
     }
 }

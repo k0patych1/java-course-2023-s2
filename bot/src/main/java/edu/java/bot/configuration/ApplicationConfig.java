@@ -14,7 +14,10 @@ public record ApplicationConfig(
     String telegramToken,
 
     @NotNull
-    RetryPolicy retryPolicy
+    RetryPolicy retryPolicy,
+
+    @NotNull
+    RateLimiting rateLimiting
 ) {
     public record RetryPolicy(
         @NotNull
@@ -35,5 +38,18 @@ public record ApplicationConfig(
             LINEAR,
             EXP
         }
+    }
+
+    public record RateLimiting(
+        @NotNull
+        boolean enable,
+
+        @NotNull
+        Long tokensCapacity,
+
+        @NotNull
+        Long tokensPerSecond
+    ) {
+
     }
 }

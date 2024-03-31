@@ -1,4 +1,4 @@
-package edu.java.bot.configuration.conditional;
+package edu.java.bot.configuration.conditional.retry;
 
 import java.time.Duration;
 import java.util.function.BiFunction;

@@ -1,4 +1,4 @@
-package edu.java.configuration.conditional;
+package edu.java.configuration.conditional.retry;
 
 import java.time.Duration;
 import java.util.function.BiFunction;
@@ -29,7 +29,7 @@ public class LinearRetry extends Retry {
     }
 
     @Override
-    public Publisher<?> generateCompanion(Flux<Retry.RetrySignal> retrySignals) {
+    public Publisher<?> generateCompanion(Flux<RetrySignal> retrySignals) {
         return retrySignals.flatMap(this::getRetry);
     }
 
@@ -40,8 +40,7 @@ public class LinearRetry extends Retry {
         return this;
     }
 
-
-    private Mono<Long> getRetry(Retry.RetrySignal rs) {
+    private Mono<Long> getRetry(RetrySignal rs) {
         if (!filter.test(rs.failure()) || rs.totalRetries() >= maxAttempts) {
             throw Exceptions.propagate(retryExhaustedGenerator.apply(this, rs));
         }

@@ -26,7 +26,10 @@ public record ApplicationConfig(
     AccessType databaseAccessType,
 
     @NotNull
-    RetryPolicy retryPolicy
+    RetryPolicy retryPolicy,
+
+    @NotNull
+    RateLimiting rateLimiting
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
@@ -56,5 +59,18 @@ public record ApplicationConfig(
             LINEAR,
             EXP
         }
+    }
+
+    public record RateLimiting(
+        @NotNull
+        boolean enable,
+
+        @NotNull
+        Long tokensCapacity,
+
+        @NotNull
+        Long tokensPerSecond
+    ) {
+
     }
 }
