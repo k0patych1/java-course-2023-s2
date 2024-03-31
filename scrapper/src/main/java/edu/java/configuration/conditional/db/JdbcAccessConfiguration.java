@@ -1,4 +1,4 @@
-package edu.java.configuration.conditional;
+package edu.java.configuration.conditional.db;
 
 import edu.java.repositories.jdbc.IJdbcLinkRepository;
 import edu.java.repositories.jdbc.IJdbcSubscriptionRepository;

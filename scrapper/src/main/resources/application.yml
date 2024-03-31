@@ -7,6 +7,11 @@ app:
     interval: 10000
     force-check-delay: 10000
   database-access-type: jpa
+  retry-policy:
+    back-off-type: exp
+    max-attempts: 3
+    retry-codes: 502
+    delay: 1000
 
 spring:
   jpa:

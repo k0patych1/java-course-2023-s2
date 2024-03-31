@@ -16,6 +16,7 @@ import java.util.Arrays;
 import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -23,7 +24,7 @@ public class ClientsTest {
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
-    public void stubForGet(String endpoint, String body) {
+    private void stubForGet(String endpoint, String body) {
         WireMock.stubFor(WireMock.get(WireMock.urlEqualTo(endpoint))
             .willReturn(aResponse()
                 .withHeader("Content-Type", "application/json")
@@ -31,7 +32,7 @@ public class ClientsTest {
                 .withStatus(200)));
     }
 
-    public void stubForPost(String endpoint, String body) {
+    private void stubForPost(String endpoint, String body) {
         WireMock.stubFor(WireMock.post(WireMock.urlEqualTo(endpoint))
             .willReturn(aResponse()
                 .withBody(body)
@@ -63,7 +64,7 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IGitHubClient gitHubClient = new GitHubClient(mockWebClient);
+        IGitHubClient gitHubClient = new GitHubClient(mockWebClient, Retry.max(0));
 
         assertThat(gitHubClient.fetchRepo(user, repository).name())
             .isEqualTo("test");
@@ -106,7 +107,7 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IGitHubClient gitHubClient = new GitHubClient(mockWebClient);
+        IGitHubClient gitHubClient = new GitHubClient(mockWebClient, Retry.max(0));
 
         GitHubLastCommitInMainBranch lastCommit = gitHubClient.fetchRepoMainBranch(user, repository);
 
@@ -157,7 +158,7 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IStackOverFlowClient gitHubClient = new StackOverFlowClient(mockWebClient);
+        IStackOverFlowClient gitHubClient = new StackOverFlowClient(mockWebClient, Retry.max(0));
 
         StackOverFlowLastAnswer.Answer answer = gitHubClient.fetchQuestion(questionId)
             .answerList()
@@ -185,7 +186,7 @@ public class ClientsTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IBotClient botClient = new BotClient(mockWebClient);
+        IBotClient botClient = new BotClient(mockWebClient, Retry.max(0));
 
         String endpoint = "/updates";
         String body = "OK";

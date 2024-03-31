@@ -4,13 +4,16 @@ import edu.java.bot.models.dto.request.AddLinkRequest;
 import edu.java.bot.models.dto.request.RemoveLinkRequest;
 import edu.java.bot.models.dto.response.LinkResponse;
 import edu.java.bot.models.dto.response.ListLinksResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
 
 @Service
+@RequiredArgsConstructor
 public class ScrapperClient implements IScrapperClient {
     private static final String LINKS_ENDPOINT = "/links";
     private static final String CHAT_ENDPOINT = "/tg-chat/{id}";
@@ -19,10 +22,7 @@ public class ScrapperClient implements IScrapperClient {
 
     private final WebClient webClient;
 
-    @Autowired
-    public ScrapperClient(WebClient webClient) {
-        this.webClient = webClient;
-    }
+    private final Retry retry;
 
     @Override
     public String registerChat(Long id) {
@@ -31,6 +31,7 @@ public class ScrapperClient implements IScrapperClient {
             .uri(CHAT_ENDPOINT, id)
             .retrieve()
             .bodyToMono(String.class)
+            .retryWhen(retry)
             .block();
     }
 
@@ -41,6 +42,7 @@ public class ScrapperClient implements IScrapperClient {
             .uri(CHAT_ENDPOINT, id)
             .retrieve()
             .bodyToMono(String.class)
+            .retryWhen(retry)
             .block();
     }
 
@@ -53,6 +55,7 @@ public class ScrapperClient implements IScrapperClient {
             .body(BodyInserters.fromValue(addLinkRequest))
             .retrieve()
             .bodyToMono(LinkResponse.class)
+            .retryWhen(retry)
             .block();
     }
 
@@ -65,6 +68,7 @@ public class ScrapperClient implements IScrapperClient {
             .body(BodyInserters.fromValue(removeLinkRequest))
             .retrieve()
             .bodyToMono(LinkResponse.class)
+            .retryWhen(retry)
             .block();
     }
 
@@ -76,6 +80,7 @@ public class ScrapperClient implements IScrapperClient {
             .header(CHAT_HEADER, String.valueOf(tgChatId))
             .retrieve()
             .bodyToMono(ListLinksResponse.class)
+            .retryWhen(retry)
             .block();
     }
 }
