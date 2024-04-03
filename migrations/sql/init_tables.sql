@@ -22,6 +22,7 @@ create table subscriptions
 
     primary key (id),
     foreign key (chat_id) references chat(id) on delete cascade,
-    foreign key (link_id) references link(id) on delete cascade
+    foreign key (link_id) references link(id) on delete cascade,
+    unique(chat_id, link_id)
 );
 

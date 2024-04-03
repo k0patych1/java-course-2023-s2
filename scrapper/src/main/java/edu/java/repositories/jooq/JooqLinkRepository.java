@@ -7,10 +7,8 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
 import static edu.java.domain.jooq.Tables.LINK;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqLinkRepository implements IJooqLinkRepository {
     private final DSLContext dslContext;

@@ -1,17 +1,16 @@
 package edu.java.controllers;
 
 import api.LinksApi;
+import edu.java.exceptions.LinkNotFoundException;
 import edu.java.models.dto.Link;
 import edu.java.services.ILinkService;
 import java.net.URI;
 import java.util.List;
-import java.util.Objects;
+import lombok.RequiredArgsConstructor;
 import model.AddLinkRequest;
 import model.LinkResponse;
 import model.ListLinksResponse;
 import model.RemoveLinkRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,13 +18,9 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @RestController
+@RequiredArgsConstructor
 public class LinksController implements LinksApi {
     private final ILinkService linkService;
-
-    @Autowired
-    public LinksController(@Qualifier("jdbcLinkService") ILinkService linkService) {
-        this.linkService = linkService;
-    }
 
     @Override
     public Mono<ResponseEntity<LinkResponse>> linksDelete(
@@ -33,17 +28,19 @@ public class LinksController implements LinksApi {
         Mono<RemoveLinkRequest> removeLinkRequest,
         ServerWebExchange exchange
     ) {
-        URI url = Objects.requireNonNull(removeLinkRequest.block()).getLink();
+        return removeLinkRequest.flatMap(request -> {
+            URI url = request.getLink();
 
-        if (!linkService.remove(url, tgChatId)) {
-            return Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-        }
+            if (!linkService.remove(url, tgChatId)) {
+                return Mono.error(new LinkNotFoundException("Link " + url.toString() + " doesnt' tracking"));
+            }
 
-        LinkResponse linkResponse = new LinkResponse();
-        linkResponse.setId(tgChatId);
-        linkResponse.setUrl(url);
+            LinkResponse linkResponse = new LinkResponse();
+            linkResponse.setId(tgChatId);
+            linkResponse.setUrl(url);
 
-        return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+            return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+        });
     }
 
     @Override
@@ -73,12 +70,14 @@ public class LinksController implements LinksApi {
         Mono<AddLinkRequest> addLinkRequest,
         ServerWebExchange exchange
     ) {
-        URI url = Objects.requireNonNull(addLinkRequest.block()).getLink();
-        linkService.add(url, tgChatId);
-        LinkResponse linkResponse = new LinkResponse();
-        linkResponse.setId(tgChatId);
-        linkResponse.setUrl(url);
+        return addLinkRequest.flatMap(request -> {
+            URI url = request.getLink();
+            linkService.add(url, tgChatId);
+            LinkResponse linkResponse = new LinkResponse();
+            linkResponse.setId(tgChatId);
+            linkResponse.setUrl(url);
 
-        return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+            return Mono.just(new ResponseEntity<>(linkResponse, HttpStatus.OK));
+        });
     }
 }

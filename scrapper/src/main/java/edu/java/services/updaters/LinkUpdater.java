@@ -10,7 +10,6 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,8 +26,8 @@ public class LinkUpdater implements ILinkUpdater {
     public LinkUpdater(
         ApplicationConfig applicationConfig,
         List<? extends UpdatersChain> updaters,
-        @Qualifier("jdbcLinkService") ILinkService linkService,
-        @Qualifier("jdbcTgChatService") ITgChatService tgChatService
+        ILinkService linkService,
+        ITgChatService tgChatService
     ) {
         this.updaters = updaters;
         this.linkService = linkService;

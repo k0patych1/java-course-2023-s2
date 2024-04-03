@@ -2,10 +2,8 @@ package edu.java.repositories.jooq;
 
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Repository;
 import static edu.java.domain.jooq.Tables.CHAT;
 
-@Repository
 @RequiredArgsConstructor
 public class JooqTgChatRepository implements IJooqTgChatRepository {
     private final DSLContext dsl;
@@ -21,6 +19,7 @@ public class JooqTgChatRepository implements IJooqTgChatRepository {
     public void save(Long id) {
         dsl.insertInto(CHAT)
             .set(CHAT.ID, id)
+            .onDuplicateKeyIgnore()
             .execute();
     }
 }

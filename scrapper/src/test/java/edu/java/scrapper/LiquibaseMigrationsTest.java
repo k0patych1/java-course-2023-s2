@@ -20,9 +20,11 @@ public class LiquibaseMigrationsTest extends IntegrationTest {
     }
 
     private boolean checkIfTableExists(String tableName) {
-        try (Connection connection = DriverManager.getConnection(POSTGRES.getJdbcUrl(),
+        try (Connection connection = DriverManager.getConnection(
+            POSTGRES.getJdbcUrl(),
             POSTGRES.getUsername(),
-            POSTGRES.getPassword())) {
+            POSTGRES.getPassword()
+        )) {
             PreparedStatement pstmt = connection.prepareStatement(
                 "SELECT * FROM " + tableName);
             return pstmt.executeQuery().getMetaData().getTableName(1).equals(tableName);
