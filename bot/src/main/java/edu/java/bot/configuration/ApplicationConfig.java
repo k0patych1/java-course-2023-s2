@@ -17,7 +17,10 @@ public record ApplicationConfig(
     RetryPolicy retryPolicy,
 
     @NotNull
-    RateLimiting rateLimiting
+    RateLimiting rateLimiting,
+
+    @NotNull
+    Kafka kafka
 ) {
     public record RetryPolicy(
         @NotNull
@@ -51,5 +54,56 @@ public record ApplicationConfig(
         Long tokensPerSecond
     ) {
 
+    }
+
+    public record Kafka(
+        @NotEmpty
+        String groupId,
+
+        @NotEmpty
+        String bootstrapServers,
+
+        @NotEmpty
+        String autoOffsetReset,
+
+        @NotNull
+        Integer maxPollIntervalMs,
+
+        @NotNull
+        Boolean enableAutoCommit,
+
+        @NotNull
+        Integer concurrency,
+
+        @NotNull
+        DLQProperties dlq
+    ) {
+        public record DLQProperties(
+            @NotEmpty
+            String topic,
+
+            @NotNull
+            Integer replicationFactor,
+
+            @NotNull
+            Integer partitions,
+
+            @NotEmpty
+            String acksMode,
+
+            @NotNull
+            Integer deliveryTimeout,
+
+            @NotNull
+            Integer linger,
+
+            @NotNull
+            Integer batchSize,
+
+            @NotNull
+            Integer maxInFlightPerConnection
+        ) {
+
+        }
     }
 }
