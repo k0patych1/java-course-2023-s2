@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.util.retry.Retry;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.delete;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
@@ -34,7 +35,7 @@ public class ScrapperClientTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient);
+        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient, Retry.max(0));
 
         String endpoint = "/tg-chat/239";
         String body = "OK";
@@ -61,7 +62,7 @@ public class ScrapperClientTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient);
+        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient, Retry.max(0));
 
         String endpoint = "/tg-chat/239";
         String body = "OK";
@@ -88,7 +89,7 @@ public class ScrapperClientTest {
             .baseUrl(baseMockUrl)
             .build();
 
-        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient);
+        IScrapperClient scrapperClient = new ScrapperClient(mockWebClient, Retry.max(0));
 
         String endpoint = "/links";
         String body = """

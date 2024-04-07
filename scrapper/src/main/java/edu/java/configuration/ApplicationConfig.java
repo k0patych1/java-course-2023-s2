@@ -3,6 +3,7 @@ package edu.java.configuration;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
+import java.util.Set;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,7 +23,13 @@ public record ApplicationConfig(
     Duration intervalCheckTime,
 
     @NotNull
-    AccessType databaseAccessType
+    AccessType databaseAccessType,
+
+    @NotNull
+    RetryPolicy retryPolicy,
+
+    @NotNull
+    RateLimiting rateLimiting
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
@@ -31,5 +38,39 @@ public record ApplicationConfig(
         JDBC,
         JPA,
         JOOQ
+    }
+
+    public record RetryPolicy(
+        @NotNull
+        BackOffType backOffType,
+
+        @NotNull
+        Long maxAttempts,
+
+        @NotNull
+        Duration delay,
+
+        @NotNull
+        Set<Integer> retryCodes
+
+    ) {
+        public enum BackOffType {
+            CONST,
+            LINEAR,
+            EXP
+        }
+    }
+
+    public record RateLimiting(
+        @NotNull
+        boolean enable,
+
+        @NotNull
+        Long tokensCapacity,
+
+        @NotNull
+        Long tokensPerSecond
+    ) {
+
     }
 }

@@ -1,5 +1,14 @@
 app:
   telegram-token: ${TOKEN}
+  retry-policy:
+    back-off-type: exp
+    max-attempts: 3
+    retry-codes: 502
+    delay: 1000
+  rate-limiting:
+    enable: true
+    tokens-capacity: 120
+    tokens-per-second: 10
 
 spring:
   application:

@@ -1,4 +1,4 @@
-package edu.java.configuration.conditional;
+package edu.java.configuration.conditional.db;
 
 import edu.java.repositories.jooq.IJooqLinkRepository;
 import edu.java.repositories.jooq.IJooqSubscriptionRepository;

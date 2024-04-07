@@ -19,7 +19,7 @@ public class UserMessageProcessorTest {
     @Test
     public void messageProcessorCorrectCommandTest() {
         var helpMessageUpdate = mock(Update.class);
-        SendMessage expectedSendMessage = new SendMessage(666l, "answer");
+        SendMessage expectedSendMessage = new SendMessage(666L, "answer");
 
         Mockito.when(command.command()).thenReturn("/test");
         Mockito.when(command.handle(helpMessageUpdate)).thenReturn(expectedSendMessage);
@@ -28,7 +28,6 @@ public class UserMessageProcessorTest {
         List<Command> commands = List.of(command);
 
         UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(commands);
-        ;
         SendMessage sendMessage = messageProcessor.process(helpMessageUpdate);
 
         assertThat(sendMessage.getParameters()).isEqualTo(expectedSendMessage.getParameters());
