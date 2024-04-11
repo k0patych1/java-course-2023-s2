@@ -7,7 +7,6 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
-import edu.java.bot.services.listeners.IUpdatesListenerBot;
 import edu.java.bot.services.processors.UserMessageProcessorImpl;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
