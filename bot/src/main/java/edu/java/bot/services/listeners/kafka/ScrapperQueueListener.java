@@ -1,4 +1,4 @@
-package edu.java.bot.services.listeners;
+package edu.java.bot.services.listeners.kafka;
 
 import edu.java.bot.services.TelegramBotService;
 import lombok.RequiredArgsConstructor;

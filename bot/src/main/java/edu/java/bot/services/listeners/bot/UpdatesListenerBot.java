@@ -1,4 +1,4 @@
-package edu.java.bot.services.listeners;
+package edu.java.bot.services.listeners.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;
@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SetMyCommands;
 import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
+import edu.java.bot.services.listeners.IUpdatesListenerBot;
 import edu.java.bot.services.processors.UserMessageProcessorImpl;
 import jakarta.annotation.PostConstruct;
 import java.util.List;
