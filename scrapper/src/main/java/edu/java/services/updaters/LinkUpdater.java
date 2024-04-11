@@ -45,6 +45,7 @@ public class LinkUpdater implements ILinkUpdater {
                     List<TgChat> tgChats = tgChatService.listAllWithLink(link.getId());
                     cntUpdated += updater.update(link, tgChats);
                     linkService.update(link.getId(), OffsetDateTime.now());
+                    break;
                 }
             }
         }
