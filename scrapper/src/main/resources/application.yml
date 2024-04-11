@@ -16,8 +16,22 @@ app:
     enable: true
     tokens-capacity: 120
     tokens-per-second: 10
+  kafka:
+    topic: messages.updates
+    bootstrap-servers: localhost:29091, localhost:29092, localhost:9093
+    replication-factor: 2
+    partitions: 2
+    acks-mode: all
+    delivery-timeout: 50000
+    linger: 10000
+    batch-size: 100000
+    max-in-flight-per-connection: 5
+    enable-idempotence: true
+  use-queue: true
 
 spring:
+  main:
+    web-application-type: reactive
   jpa:
     properties:
       hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect

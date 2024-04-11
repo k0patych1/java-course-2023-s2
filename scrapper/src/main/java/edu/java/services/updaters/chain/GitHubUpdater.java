@@ -4,8 +4,8 @@ import edu.java.models.GitHubRepoLastUpdate;
 import edu.java.models.dto.Link;
 import edu.java.models.dto.TgChat;
 import edu.java.services.IGitHubService;
-import edu.java.services.clients.IBotClient;
 import edu.java.services.clients.IGitHubClient;
+import edu.java.services.notification.NotificationService;
 import edu.java.services.parsers.GitHubUrlParser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GitHubUpdater implements UpdatersChain {
-    private final IBotClient botClient;
+    private final NotificationService notificationService;
 
     private final IGitHubClient gitHubClient;
 
@@ -35,7 +35,7 @@ public class GitHubUpdater implements UpdatersChain {
         GitHubRepoLastUpdate update = gitHubClient.fetchRepo(user, repository);
 
         if (update.time().isAfter(link.getLastCheckTime())) {
-            botClient.update(gitHubService.formUpdate(update, link, tgChats));
+            notificationService.update(gitHubService.formUpdate(update, link, tgChats));
             return 1;
         }
 

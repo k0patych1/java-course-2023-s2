@@ -1,4 +1,4 @@
-package edu.java.bot.services.listeners;
+package edu.java.bot.services.listeners.bot;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.BotCommand;

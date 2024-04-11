@@ -29,7 +29,13 @@ public record ApplicationConfig(
     RetryPolicy retryPolicy,
 
     @NotNull
-    RateLimiting rateLimiting
+    RateLimiting rateLimiting,
+
+    @NotNull
+    Boolean useQueue,
+
+    @NotNull
+    Kafka kafka
 ) {
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
     }
@@ -52,7 +58,6 @@ public record ApplicationConfig(
 
         @NotNull
         Set<Integer> retryCodes
-
     ) {
         public enum BackOffType {
             CONST,
@@ -70,6 +75,40 @@ public record ApplicationConfig(
 
         @NotNull
         Long tokensPerSecond
+    ) {
+
+    }
+
+    public record Kafka(
+        @NotEmpty
+        String topic,
+
+        @NotEmpty
+        String bootstrapServers,
+
+        @NotNull
+        Integer replicationFactor,
+
+        @NotNull
+        Integer partitions,
+
+        @NotEmpty
+        String acksMode,
+
+        @NotNull
+        Integer deliveryTimeout,
+
+        @NotNull
+        Integer linger,
+
+        @NotNull
+        Integer batchSize,
+
+        @NotNull
+        Integer maxInFlightPerConnection,
+
+        @NotNull
+        Boolean enableIdempotence
     ) {
 
     }
