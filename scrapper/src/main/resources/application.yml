@@ -1,7 +1,7 @@
 app:
   git-hub-base-url: https://api.github.com
   stack-over-flow-base-url: https://api.stackexchange.com
-  interval-check-time: 120000
+  interval-check-time: 12000
   scheduler:
     enable: true
     interval: 10000
@@ -60,17 +60,17 @@ management:
     port: 8081
   endpoints:
     web:
+      base-path: /
+      path-mapping:
+        prometheus: metrics
       exposure:
         include: info, health, prometheus
-  endpoint:
-    info:
-      enabled: true
-    health:
-      enabled: true
-    prometheus:
-      enabled: true
-    metrics:
-      enabled: true
   metrics:
     tags:
       application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
+
