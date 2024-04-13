@@ -40,13 +40,13 @@ public class TrackCommand implements Command {
         }
 
         String trackedLink = commandParts[1];
-        String responseText;
 
-        if (linkValidator.isBotSupportLink(trackedLink)) {
-            responseText = "Started tracking the link: " + trackedLink;
-        } else {
-            responseText = "Please provide a correct supportable link";
+        if (!linkValidator.isBotSupportLink(trackedLink)) {
+            return new SendMessage(update.message().chat().id(),
+                "Please provide a correct supportable link");
         }
+
+        String responseText = "Started tracking the link: " + trackedLink;
 
         AddLinkRequest addLinkRequest = new AddLinkRequest();
         addLinkRequest.setLink(URI.create(trackedLink));

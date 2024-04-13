@@ -25,6 +25,10 @@ app:
       linger: 10000
       batch-size: 100000
       max-in-flight-per-connection: 5
+  micrometer:
+    processed-messages-counter:
+      name: messages.processed
+      description: количество обработанных сообщений от telegram
 
 spring:
   main:
