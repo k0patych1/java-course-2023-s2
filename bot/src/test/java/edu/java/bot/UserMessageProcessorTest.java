@@ -8,6 +8,7 @@ import edu.java.bot.commands.Command;
 import edu.java.bot.services.processors.UserMessageProcessor;
 import edu.java.bot.services.processors.UserMessageProcessorImpl;
 import java.util.List;
+import io.micrometer.core.instrument.Counter;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -15,6 +16,8 @@ import static org.mockito.Mockito.mock;
 
 public class UserMessageProcessorTest {
     private final Command command = mock(Command.class);
+
+    private final Counter counter = mock(Counter.class);
 
     @Test
     public void messageProcessorCorrectCommandTest() {
@@ -27,7 +30,7 @@ public class UserMessageProcessorTest {
 
         List<Command> commands = List.of(command);
 
-        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(commands);
+        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(counter, commands);
         SendMessage sendMessage = messageProcessor.process(helpMessageUpdate);
 
         assertThat(sendMessage.getParameters()).isEqualTo(expectedSendMessage.getParameters());
@@ -43,7 +46,7 @@ public class UserMessageProcessorTest {
         Mockito.when(message.chat()).thenReturn(chat);
         Mockito.when(chat.id()).thenReturn(666L);
 
-        SendMessage expectedSendMessage = new SendMessage(666l, "Unknown command");
+        SendMessage expectedSendMessage = new SendMessage(666L, "Unknown command");
 
         Mockito.when(command.command()).thenReturn("/test");
         Mockito.when(command.handle(helpMessageUpdate)).thenReturn(expectedSendMessage);
@@ -51,7 +54,7 @@ public class UserMessageProcessorTest {
 
         List<Command> commands = List.of(command);
 
-        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(commands);
+        UserMessageProcessor messageProcessor = new UserMessageProcessorImpl(counter, commands);
         ;
         SendMessage sendMessage = messageProcessor.process(helpMessageUpdate);
 

@@ -20,7 +20,10 @@ public record ApplicationConfig(
     RateLimiting rateLimiting,
 
     @NotNull
-    Kafka kafka
+    Kafka kafka,
+
+    @NotNull
+    Micrometer micrometer
 ) {
     public record RetryPolicy(
         @NotNull
@@ -104,6 +107,16 @@ public record ApplicationConfig(
             Integer maxInFlightPerConnection
         ) {
 
+        }
+    }
+
+    public record Micrometer(
+        ProcessedMessagesCounter processedMessagesCounter
+    ) {
+        public record ProcessedMessagesCounter(
+            String name,
+            String description
+        ) {
         }
     }
 }

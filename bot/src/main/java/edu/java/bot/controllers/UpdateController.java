@@ -16,8 +16,9 @@ public class UpdateController implements UpdatesApi {
 
     @Override
     public Mono<ResponseEntity<Void>> updatesPost(Mono<LinkUpdate> linkUpdate, ServerWebExchange exchange) {
-        telegramBot.sendMessage(linkUpdate.block());
-
-        return Mono.just(ResponseEntity.ok().build());
+        return linkUpdate.flatMap(update -> {
+            telegramBot.sendMessage(update);
+            return Mono.just(ResponseEntity.ok().build());
+        });
     }
 }

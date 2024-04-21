@@ -65,11 +65,11 @@ services:
       - "29092:29092"
     environment:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092, PLAINTEXT_HOST://localhost:29092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: 2
-      BOOTSTRAP_SERVERS: kafka1:9091,kafka2:9092,kafka3:9093
+      BOOTSTRAP_SERVERS: kafka1:9091, kafka2:9092, kafka3:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       ZOOKEEPER: zookeeper:2181
 
@@ -83,11 +83,11 @@ services:
       - "29093:29093"
     environment:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9093,PLAINTEXT_HOST://localhost:29093
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093,PLAINTEXT_HOST://0.0.0.0:29093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9093, PLAINTEXT_HOST://localhost:29093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093, PLAINTEXT_HOST://0.0.0.0:29093
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKER_ID: 3
-      BOOTSTRAP_SERVERS: kafka1:9091,kafka2:9092,kafka3:9093
+      BOOTSTRAP_SERVERS: kafka1:9091, kafka2:9092, kafka3:9093
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       ZOOKEEPER: zookeeper:2181
 
@@ -103,17 +103,36 @@ services:
       # blocks until kafka is reachable
       kafka-topics --bootstrap-server kafka1:9091, kafka2:9092, kafka3:9093 --list
       echo -e 'Creating kafka topics'
-      kafka-topics --bootstrap-server kafka1:9091, kafka2:9092,kafka3:9093 --create --if-not-exists --topic messages.updates --partitions 2
+      kafka-topics --bootstrap-server kafka1:9091, kafka2:9092, kafka3:9093 --create --if-not-exists --topic messages.updates --partitions 2
       echo -e 'Creating kafka DLQ-topics'
       kafka-topics --bootstrap-server kafka1:9091, kafka2:9092, kafka3:9093 --create --if-not-exists --topic messages.updates_dlq --partitions 2
       echo -e 'Successfully created the following topics:'
       kafka-topics --bootstrap-server kafka1:9091, kafka2:9092, kafka3:9093 --list
       "
 
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus:/prometheus
+
+  grafana:
+    image: grafana/grafana-oss
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana:/var/lib/grafana
+
 volumes:
   postgresql: { }
   zookeeper: { }
   kafka: { }
+  prometheus: {}
+  grafana: {}
 
 networks:
   backend: { }
